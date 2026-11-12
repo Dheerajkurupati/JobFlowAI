@@ -274,6 +274,18 @@ async def generate_outreach(job_id: str):
     return {"outreach_draft": draft}
 
 
+@app.post("/api/harvest")
+async def trigger_harvest():
+    """Trigger concurrent multi-board job harvesting across LinkedIn, Indeed, Glassdoor, and ZipRecruiter."""
+    from src.harvester.multi_scraper import harvest_jobs_across_platforms
+    summary = harvest_jobs_across_platforms(
+        config=config,
+        platforms=["linkedin", "indeed", "glassdoor", "ziprecruiter"],
+        max_results_per_platform=10
+    )
+    return {"message": "Harvest complete", "summary": summary}
+
+
 @app.get("/api/export-excel")
 async def export_excel():
     """Trigger download of the formatted data/Job_Tracker.xlsx spreadsheet."""

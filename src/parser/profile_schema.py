@@ -53,3 +53,4 @@ class CandidateProfile(BaseModel):
     target_locations: List[str] = Field(
         default_factory=lambda: ["Hyderabad", "Bengaluru", "Chennai", "Pune", "Remote"]
     )
+

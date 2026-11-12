@@ -58,3 +58,4 @@ def test_full_parse_pipeline():
     assert "Python" in profile.skills
     assert "FastAPI" in profile.skills
     assert len(profile.primary_roles) > 0
+

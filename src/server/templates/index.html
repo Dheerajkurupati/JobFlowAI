@@ -131,12 +131,18 @@
       </form>
 
       <!-- Right Utility Actions -->
-      <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-2.5">
         
+        <!-- Live Hunting Button -->
+        <button onclick="triggerHarvest()" id="btn-harvest" class="px-3.5 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-all flex items-center space-x-1.5">
+          <span>⚡</span>
+          <span>Hunt Today's Jobs</span>
+        </button>
+
         <!-- Q&A Memory Vault -->
-        <button onclick="openMemoryModal()" class="px-3.5 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg shadow-sm transition-all flex items-center space-x-2">
+        <button onclick="openMemoryModal()" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg shadow-sm transition-all flex items-center space-x-1.5">
           <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-          <span>Q&A Memory</span>
+          <span>Memory Vault</span>
           <span id="mem-count-badge" class="px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-600 rounded font-mono font-medium">7</span>
         </button>
 
@@ -797,6 +803,26 @@
         alert('Network error.');
       } finally {
         btn.innerText = '+ Ingest';
+        btn.disabled = false;
+      }
+    }
+
+    async function triggerHarvest() {
+      const btn = document.getElementById('btn-harvest');
+      btn.innerText = '⚡ Scraping Multi-Board...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/harvest', { method: 'POST' });
+        const data = await res.json();
+        const s = data.summary || {};
+        alert(`🎉 Harvest Complete!\n• Total Found: ${s.total_scraped || 0}\n• Approved: ${s.accepted || 0}\n• Skipped (per rules): ${s.skipped || 0}\n• Added to Dashboard: ${s.new_added || 0}`);
+        loadData();
+      } catch (err) {
+        alert('Harvest triggered in background. Refreshing feed...');
+        loadData();
+      } finally {
+        btn.innerText = '⚡ Hunt Today\'s Jobs';
         btn.disabled = false;
       }
     }

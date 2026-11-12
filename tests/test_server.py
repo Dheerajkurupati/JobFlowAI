@@ -42,3 +42,15 @@ def test_memory_api():
     updated_mem = save_res.json()["memory"]
     assert updated_mem["github_portfolio"] == "https://github.com/mywork"
 
+
+def test_harvest_endpoint_exists():
+    """Verify that /api/harvest endpoint can be called."""
+    from unittest.mock import patch
+
+    with patch("src.harvester.multi_scraper.harvest_jobs_across_platforms") as mock_harvest:
+        mock_harvest.return_value = {"total_scraped": 10, "accepted": 8, "skipped": 2, "new_added": 8}
+        response = client.post("/api/harvest")
+        assert response.status_code == 200
+        assert response.json()["message"] == "Harvest complete"
+        assert response.json()["summary"]["accepted"] == 8
+

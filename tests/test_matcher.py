@@ -38,3 +38,4 @@ def test_generate_skill_roadmap():
     assert any("Docker" in item for item in roadmap)
     assert any("Kafka" in item for item in roadmap)
     assert any("Celery" in item for item in roadmap)
+

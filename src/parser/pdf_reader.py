@@ -173,3 +173,4 @@ def parse_resume_to_profile(file_path: str) -> CandidateProfile:
         secondary_roles=secondary_roles,
         target_locations=["Hyderabad", "Bengaluru", "Chennai", "Pune", "Remote"]
     )
+

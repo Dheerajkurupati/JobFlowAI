@@ -104,3 +104,4 @@ def generate_skill_roadmap(missing_skills: List[str]) -> List[str]:
         recommendations.append("• Complete Match: Your technical stack aligns directly with all requirements in this posting.")
 
     return recommendations
+
