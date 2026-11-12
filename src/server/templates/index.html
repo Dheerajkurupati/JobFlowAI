@@ -163,11 +163,12 @@
           <span>Export .xlsx</span>
         </a>
 
-        <!-- Candidate Badge -->
-        <div class="h-8 px-3 rounded-lg bg-slate-100 border border-slate-200 text-slate-800 flex items-center space-x-2 text-xs font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span class="truncate max-w-[120px]">{{ candidate.name }}</span>
-        </div>
+        <!-- Candidate Profile & Resume Button -->
+        <button onclick="openProfileModal()" class="h-8 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 flex items-center space-x-2 text-xs font-semibold transition-all" title="Candidate Profile & Resume Settings">
+          <span id="badge-dot" class="w-2 h-2 rounded-full {% if candidate.resume_uploaded %}bg-emerald-500{% else %}bg-amber-500 animate-pulse{% endif %}"></span>
+          <span id="badge-name" class="truncate max-w-[120px]">{{ candidate.name }}</span>
+          <span class="text-[10px] text-slate-400">⚙️</span>
+        </button>
       </div>
 
     </div>
@@ -533,6 +534,85 @@
         <button onclick="copyOutreach()" id="btn-copy-outreach" class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
           📋 Copy to Clipboard
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CANDIDATE PROFILE & RESUME UPLOAD MODAL -->
+  <div id="profile-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+            <span>👤 Candidate Profile & Resume Engine</span>
+          </h3>
+          <p class="text-xs text-slate-500">Upload your resume to auto-parse skills, role matches, and browser credentials.</p>
+        </div>
+        <button onclick="closeProfileModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 font-bold">✕</button>
+      </div>
+
+      <div class="overflow-y-auto flex-1 space-y-4 pr-1 text-xs">
+        
+        <!-- 1. Resume Drag & Drop Upload Zone -->
+        <div class="p-4 bg-slate-50 border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl transition-all text-center space-y-2">
+          <input type="file" id="resume-file-input" accept=".pdf,.txt,.md" class="hidden" onchange="handleResumeUpload(event)" />
+          <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-600 mx-auto flex items-center justify-center text-base">📄</div>
+          <div>
+            <span class="font-bold text-slate-800 text-xs">Upload your Resume (PDF / TXT / MD)</span>
+            <p class="text-slate-500 text-[11px] mt-0.5" id="resume-status-text">Click or drag & drop to auto-parse skills and contacts.</p>
+          </div>
+          <button type="button" onclick="document.getElementById('resume-file-input').click()" id="btn-upload-resume" class="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-semibold text-xs transition-colors shadow-sm">
+            Choose Resume File
+          </button>
+          <div id="upload-status" class="hidden text-[11px] font-medium p-2 rounded"></div>
+        </div>
+
+        <!-- 2. Candidate Information Form -->
+        <form onsubmit="handleSaveProfile(event)" class="space-y-3">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-1">Full Name</label>
+              <input type="text" id="prof-name" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 text-xs" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-1">Email Address</label>
+              <input type="email" id="prof-email" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 text-xs" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-1">Phone Number</label>
+              <input type="tel" id="prof-phone" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 text-xs" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-1">Current Base City</label>
+              <input type="text" id="prof-city" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 text-xs" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-1">LinkedIn Profile URL</label>
+              <input type="url" id="prof-linkedin" placeholder="https://linkedin.com/in/username" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 text-xs" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-700 mb-1">GitHub Profile URL</label>
+              <input type="url" id="prof-github" placeholder="https://github.com/username" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 text-xs" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">Target Roles (comma-separated)</label>
+            <input type="text" id="prof-roles" placeholder="AI Engineer, Python Developer" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500 text-xs" />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-slate-700 mb-1">Extracted Technical Skills</label>
+            <div id="prof-skills-container" class="flex flex-wrap gap-1.5 p-2 bg-slate-50 border border-slate-200 rounded-lg min-h-[38px]"></div>
+          </div>
+
+          <div class="flex justify-end pt-2 border-t">
+            <button type="submit" id="btn-save-profile" class="px-5 py-2 font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-all text-xs">
+              Save Profile Details
+            </button>
+          </div>
+        </form>
+
       </div>
     </div>
   </div>
@@ -1026,6 +1106,129 @@
       } finally {
         btn.disabled = false;
         btn.innerHTML = origText;
+      }
+    }
+
+    // Candidate Profile & Resume Ingestion Management
+    async function openProfileModal() {
+      try {
+        const res = await fetch('/api/profile');
+        const p = await res.json();
+        
+        document.getElementById('prof-name').value = p.name || '';
+        document.getElementById('prof-email').value = p.email || '';
+        document.getElementById('prof-phone').value = p.phone || '';
+        document.getElementById('prof-city').value = p.city || '';
+        document.getElementById('prof-linkedin').value = p.linkedin || '';
+        document.getElementById('prof-github').value = p.github || '';
+        document.getElementById('prof-roles').value = (p.primary_roles || []).join(', ');
+
+        const statusText = document.getElementById('resume-status-text');
+        if (p.resume_uploaded) {
+          statusText.innerHTML = `Active Resume: <strong class="text-emerald-700 font-bold">${escapeHtml(p.resume_filename || 'uploaded_resume.pdf')}</strong>. Click to replace.`;
+        } else {
+          statusText.innerText = 'No resume uploaded yet. Click to upload and parse automatically.';
+        }
+
+        const skillsContainer = document.getElementById('prof-skills-container');
+        skillsContainer.innerHTML = '';
+        (p.skills || []).forEach(s => {
+          const pill = document.createElement('span');
+          pill.className = 'px-2 py-0.5 bg-blue-50 text-blue-800 border border-blue-200 rounded font-medium text-[11px]';
+          pill.innerText = s;
+          skillsContainer.appendChild(pill);
+        });
+
+        document.getElementById('profile-modal').classList.remove('hidden');
+      } catch (err) {
+        alert('Could not load profile: ' + err);
+      }
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profile-modal').classList.add('hidden');
+    }
+
+    async function handleResumeUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById('upload-status');
+      const btn = document.getElementById('btn-upload-resume');
+      btn.disabled = true;
+      btn.innerText = 'Parsing with RAG Engine...';
+      statusEl.classList.remove('hidden');
+      statusEl.className = 'text-[11px] font-medium p-2 rounded bg-blue-50 text-blue-800 border border-blue-200';
+      statusEl.innerText = `⏳ Ingesting ${file.name}, extracting skills taxonomy, contact info, and role inference...`;
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('/api/profile/upload-resume', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (res.ok) {
+          statusEl.className = 'text-[11px] font-medium p-2 rounded bg-emerald-50 text-emerald-800 border border-emerald-200';
+          statusEl.innerText = `✅ Parsed ${file.name} successfully! Extracted ${(data.profile.skills || []).length} skills and candidate details.`;
+          
+          // Refresh profile fields & header badge
+          document.getElementById('badge-name').innerText = data.profile.name || 'Candidate';
+          const badgeDot = document.getElementById('badge-dot');
+          if (badgeDot) {
+            badgeDot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+          }
+          openProfileModal();
+          loadData();
+        } else {
+          statusEl.className = 'text-[11px] font-medium p-2 rounded bg-rose-50 text-rose-800 border border-rose-200';
+          statusEl.innerText = `❌ Upload failed: ${data.detail || 'Could not parse resume.'}`;
+        }
+      } catch (err) {
+        statusEl.className = 'text-[11px] font-medium p-2 rounded bg-rose-50 text-rose-800 border border-rose-200';
+        statusEl.innerText = '❌ Error uploading resume: ' + err;
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Choose Resume File';
+      }
+    }
+
+    async function handleSaveProfile(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-profile');
+      btn.disabled = true;
+      btn.innerText = 'Saving...';
+
+      const rolesRaw = document.getElementById('prof-roles').value;
+      const primary_roles = rolesRaw.split(',').map(r => r.trim()).filter(Boolean);
+
+      const payload = {
+        name: document.getElementById('prof-name').value.trim(),
+        email: document.getElementById('prof-email').value.trim(),
+        phone: document.getElementById('prof-phone').value.trim(),
+        city: document.getElementById('prof-city').value.trim(),
+        linkedin: document.getElementById('prof-linkedin').value.trim(),
+        github: document.getElementById('prof-github').value.trim(),
+        primary_roles: primary_roles
+      };
+
+      try {
+        const res = await fetch('/api/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        document.getElementById('badge-name').innerText = data.profile.name || 'Candidate';
+        alert('🎉 Candidate profile updated successfully!');
+        closeProfileModal();
+      } catch (err) {
+        alert('Error saving profile: ' + err);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Save Profile Details';
       }
     }
 

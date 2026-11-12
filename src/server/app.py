@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 import httpx
 from bs4 import BeautifulSoup
-from fastapi import FastAPI, HTTPException, Request, Query
+from fastapi import FastAPI, HTTPException, Request, Query, UploadFile, File
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
@@ -46,13 +46,26 @@ class EmailSyncRequest(BaseModel):
     simulate: bool = False
 
 
+class ProfileUpdateRequest(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    city: Optional[str] = None
+    linkedin: Optional[str] = None
+    github: Optional[str] = None
+    skills: Optional[List[str]] = None
+    primary_roles: Optional[List[str]] = None
+    target_locations: Optional[List[str]] = None
+
+
 @app.get("/", response_class=HTMLResponse)
 async def serve_dashboard(request: Request):
     """Render the enterprise CRM Dashboard."""
+    candidate_profile = storage.get_candidate_profile()
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"candidate": config.candidate}
+        context={"candidate": candidate_profile}
     )
 
 
@@ -174,7 +187,8 @@ async def quick_ingest_job(req: QuickIngestRequest):
     from src.parser.pdf_reader import parse_resume_to_profile
 
     # Load candidate profile
-    resume_path = Path(config.candidate.resume_path)
+    cand_p = storage.get_candidate_profile()
+    resume_path = Path(cand_p.get("resume_path") or config.candidate.resume_path)
     if not resume_path.exists():
         resume_path = Path("data/sample_resume.txt")
 
@@ -220,7 +234,7 @@ async def quick_ingest_job(req: QuickIngestRequest):
         screening_notes=screening_notes,
         recruiter_name=None,
         recruiter_url=None,
-        outreach_draft=f"Hi Hiring Team at {company},\n\nI noticed your opening for {title} in {location}. With hands-on experience in {', '.join(matched[:3])}, I would love to connect and share my portfolio.\n\nBest,\n{config.candidate.name}"
+        outreach_draft=f"Hi Hiring Team at {company},\n\nI noticed your opening for {title} in {location}. With hands-on experience in {', '.join(matched[:3])}, I would love to connect and share my portfolio.\n\nBest,\n{cand_p.get('name') or config.candidate.name}"
     )
 
     storage.save_job(new_job)
@@ -255,6 +269,34 @@ async def save_memory(req: MemoryUpdateRequest):
     return {"message": "Memory updated", "memory": updated}
 
 
+@app.get("/api/profile")
+async def get_profile():
+    """Retrieve active candidate profile and resume upload status."""
+    return storage.get_candidate_profile()
+
+
+@app.post("/api/profile")
+async def update_profile(req: ProfileUpdateRequest):
+    """Manually update candidate contact details and skills from dashboard."""
+    update_data = {k: v for k, v in req.model_dump().items() if v is not None}
+    updated = storage.save_candidate_profile(update_data)
+    return {"message": "Profile updated successfully", "profile": updated}
+
+
+@app.post("/api/profile/upload-resume")
+async def upload_resume(file: UploadFile = File(...)):
+    """Upload resume (PDF, TXT, MD), parse skills & contacts, and update active profile."""
+    content = await file.read()
+    if len(content) == 0:
+        raise HTTPException(status_code=400, detail="Empty file uploaded")
+
+    updated_profile = storage.save_uploaded_resume(content, file.filename)
+    return {
+        "message": "Resume uploaded & parsed successfully",
+        "profile": updated_profile
+    }
+
+
 @app.post("/api/jobs/{job_id}/outreach")
 async def generate_outreach(job_id: str):
     jobs = storage.get_all_jobs()
@@ -267,16 +309,20 @@ async def generate_outreach(job_id: str):
     skills = ", ".join(target.get("matched_skills", ["Python", "AI", "FastAPI"]))
     recruiter = target.get("recruiter_name") or "Hiring Manager"
     first_name = recruiter.split()[0] if recruiter else "there"
+    cand_p = storage.get_candidate_profile()
+    cand_name = cand_p.get("name") or config.candidate.name
+    cand_phone = cand_p.get("phone") or config.candidate.phone
+    cand_city = cand_p.get("city") or config.candidate.city
 
     draft = (
-        f"Subject: Application for {title} - {config.candidate.name}\n\n"
+        f"Subject: Application for {title} - {cand_name}\n\n"
         f"Hi {first_name},\n\n"
         f"I came across the {title} opening at {company} and wanted to reach out directly. "
         f"I have hands-on experience building autonomous AI systems and REST APIs with {skills}.\n\n"
         f"Recently, I engineered JobFlow-AI with RAG, Playwright automation, and FastAPI. "
-        f"I'm based in {config.candidate.city} and available to join immediately.\n\n"
+        f"I'm based in {cand_city} and available to join immediately.\n\n"
         f"Looking forward to connecting!\n\n"
-        f"Best regards,\n{config.candidate.name}\n{config.candidate.phone}"
+        f"Best regards,\n{cand_name}\n{cand_phone}"
     )
 
     target["outreach_draft"] = draft

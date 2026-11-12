@@ -34,17 +34,21 @@ class BrowserPilot:
         self.config = config or load_config()
         self.storage = CRMStorage()
 
-        # Load profile
+        # Load profile from live dashboard storage or fallback
+        saved_p = self.storage.get_candidate_profile()
+        resume_file = saved_p.get("resume_path") or self.config.candidate.resume_path
         try:
-            self.profile = parse_resume_to_profile(self.config.candidate.resume_path)
+            self.profile = parse_resume_to_profile(resume_file)
         except Exception:
             self.profile = CandidateProfile(
-                name=self.config.candidate.name,
-                email=self.config.candidate.email,
-                phone=self.config.candidate.phone,
-                city=self.config.candidate.city,
-                skills=["Python", "FastAPI", "AI"],
-                primary_roles=["AI Engineer"]
+                name=saved_p.get("name") or self.config.candidate.name,
+                email=saved_p.get("email") or self.config.candidate.email,
+                phone=saved_p.get("phone") or self.config.candidate.phone,
+                city=saved_p.get("city") or self.config.candidate.city,
+                linkedin=saved_p.get("linkedin", ""),
+                github=saved_p.get("github", ""),
+                skills=saved_p.get("skills") or ["Python", "FastAPI", "AI"],
+                primary_roles=saved_p.get("primary_roles") or ["AI Engineer"]
             )
 
         self.form_filler = FormFiller(self.profile)

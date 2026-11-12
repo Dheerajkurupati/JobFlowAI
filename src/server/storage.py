@@ -171,3 +171,71 @@ class CRMStorage:
             run_date=job_dict.get("date"),
         )
 
+    def get_candidate_profile(self) -> Dict:
+        profile_file = self.data_dir / "candidate_profile.json"
+        if profile_file.exists():
+            try:
+                with open(profile_file, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                pass
+
+        # Fallback to config settings / sample resume
+        from src.config import load_config
+        cfg = load_config()
+        resume_exists = Path(cfg.candidate.resume_path).exists()
+        return {
+            "name": cfg.candidate.name,
+            "email": cfg.candidate.email,
+            "phone": cfg.candidate.phone,
+            "city": cfg.candidate.city,
+            "linkedin": "",
+            "github": "",
+            "skills": ["Python", "FastAPI", "SQL", "Machine Learning", "LLM", "RAG"],
+            "primary_roles": ["AI Engineer", "Python Developer"],
+            "target_locations": ["Hyderabad", "Bengaluru", "Chennai", "Pune", "Remote India"],
+            "resume_path": cfg.candidate.resume_path,
+            "resume_filename": Path(cfg.candidate.resume_path).name,
+            "resume_uploaded": resume_exists
+        }
+
+    def save_candidate_profile(self, profile_data: Dict) -> Dict:
+        profile_file = self.data_dir / "candidate_profile.json"
+        current = self.get_candidate_profile()
+        current.update(profile_data)
+        with open(profile_file, "w", encoding="utf-8") as f:
+            json.dump(current, f, indent=2)
+        return current
+
+    def save_uploaded_resume(self, file_bytes: bytes, filename: str) -> Dict:
+        ext = Path(filename).suffix.lower() or ".pdf"
+        target_path = self.data_dir / f"uploaded_resume{ext}"
+        with open(target_path, "wb") as f:
+            f.write(file_bytes)
+
+        from src.parser.pdf_reader import parse_resume_to_profile
+        current = self.get_candidate_profile()
+        try:
+            parsed = parse_resume_to_profile(str(target_path))
+            parsed_dict = {
+                "name": parsed.name if parsed.name and parsed.name != "Candidate" else current.get("name"),
+                "email": parsed.email if parsed.email else current.get("email"),
+                "phone": parsed.phone if parsed.phone else current.get("phone"),
+                "city": parsed.city if parsed.city else current.get("city"),
+                "linkedin": parsed.linkedin if parsed.linkedin else current.get("linkedin"),
+                "github": parsed.github if parsed.github else current.get("github"),
+                "skills": parsed.skills if parsed.skills else current.get("skills"),
+                "primary_roles": parsed.primary_roles if parsed.primary_roles else current.get("primary_roles"),
+                "resume_path": str(target_path),
+                "resume_filename": filename,
+                "resume_uploaded": True
+            }
+            return self.save_candidate_profile(parsed_dict)
+        except Exception:
+            fallback_dict = {
+                "resume_path": str(target_path),
+                "resume_filename": filename,
+                "resume_uploaded": True
+            }
+            return self.save_candidate_profile(fallback_dict)
+

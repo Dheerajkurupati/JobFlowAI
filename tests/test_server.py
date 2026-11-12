@@ -70,3 +70,44 @@ def test_auto_fill_endpoint_invalid_job():
     res = client.post("/api/jobs/nonexistent-id/auto-fill", json={"headless": True})
     assert res.status_code == 404
 
+
+def test_get_and_update_profile_endpoint():
+    """Verify that /api/profile allows reading and updating candidate information."""
+    # Get profile
+    res = client.get("/api/profile")
+    assert res.status_code == 200
+    data = res.json()
+    assert "name" in data
+    assert "email" in data
+    assert "skills" in data
+
+    # Update profile
+    update_res = client.post("/api/profile", json={
+        "name": "Jane Doe",
+        "city": "Bengaluru",
+        "linkedin": "https://linkedin.com/in/janedoe"
+    })
+    assert update_res.status_code == 200
+    updated_p = update_res.json()["profile"]
+    assert updated_p["name"] == "Jane Doe"
+    assert updated_p["city"] == "Bengaluru"
+
+
+def test_upload_resume_endpoint(tmp_path):
+    """Verify that /api/profile/upload-resume accepts resume files and parses them."""
+    sample_text = """
+    Jane Doe
+    jane.doe@example.com | +91 9876543210 | Bengaluru, India
+    linkedin.com/in/janedoe | github.com/janedoe
+
+    TECHNICAL SKILLS:
+    Languages & Frameworks: Python, FastAPI, SQL, PyTorch, Docker, LangChain, RAG
+    """
+    file_payload = {"file": ("my_resume.txt", sample_text.encode("utf-8"), "text/plain")}
+    res = client.post("/api/profile/upload-resume", files=file_payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert "profile" in data
+    assert "Python" in data["profile"]["skills"]
+    assert data["profile"]["resume_uploaded"] is True
+
