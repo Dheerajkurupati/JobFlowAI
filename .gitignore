@@ -1,0 +1,76 @@
+# ==============================================================================
+# JobFlow-AI: Privacy & Security .gitignore
+# Ensures personal resumes, generated trackers, screening memories,
+# local vector databases, and API keys are NEVER pushed to GitHub.
+# ==============================================================================
+
+# --- Personal & Sensitive User Data ---
+data/*.pdf
+data/*.docx
+data/*.xlsx
+data/*.csv
+data/screening_memory.json
+data/vector_store/
+data/cache/
+*.pdf
+*.xlsx
+
+# --- Environment & Secret Keys ---
+.env
+.env.*
+!.env.example
+
+# --- Python Environment & Build Artifacts ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- Virtual Environments ---
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# --- IDEs & OS Files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# --- Playwright & Browser Artifacts ---
+.playwright/
+test-results/
+playwright-report/
+
+# --- Testing & Coverage ---
+.pytest_cache/
+.coverage
+htmlcov/

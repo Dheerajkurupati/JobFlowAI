@@ -1,0 +1,22 @@
+Alex Mercer
+Hyderabad, India | alex.mercer.dev@example.com | +91 9876543210
+GitHub: github.com/alexmercer | LinkedIn: linkedin.com/in/alexmercer
+
+EDUCATION
+Bachelor of Technology in Computer Science and Engineering
+JNTU Hyderabad | Graduating: 2025 | CGPA: 8.4/10
+
+TECHNICAL SKILLS
+Languages: Python, JavaScript, TypeScript, SQL
+AI & Machine Learning: Large Language Models (LLMs), LangChain, RAG Architecture, ChromaDB, HuggingFace Transformers, PyTorch
+Backend & Cloud: FastAPI, Flask, REST APIs, Docker, Git, SQLite, PostgreSQL
+
+PROJECTS
+JobFlow-AI: Autonomous Job Application Co-Pilot (Python, FastAPI, ChromaDB, Playwright)
+- Engineered a hybrid RAG retrieval pipeline matching resume project embeddings with online job descriptions using ChromaDB.
+- Integrated multi-board concurrent harvesting across LinkedIn, Indeed, and Naukri with zero UI lag.
+- Implemented human-in-the-loop Playwright form pre-filling with automated screening question recall.
+
+NeuralDoc: Multimodal RAG Document QA System (Python, LangChain, Streamlit)
+- Developed an interactive QA assistant querying financial reports using dense vector embeddings and Gemini Flash API.
+- Implemented chunking strategies and cosine similarity scoring reducing retrieval hallucinations by 40%.

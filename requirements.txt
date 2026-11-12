@@ -1,0 +1,41 @@
+# ==============================================================================
+# JobFlow-AI: Python Dependencies
+# ==============================================================================
+
+# Core Configuration & Data Validation
+pydantic>=2.7.0
+pydantic-settings>=2.2.0
+pyyaml>=6.0.1
+python-dotenv>=1.0.1
+
+# Excel Generation & Spreadsheet Formatting
+openpyxl>=3.1.2
+
+# PDF & Resume Ingestion
+pypdf>=4.2.0
+pdfplumber>=0.11.0
+
+# Multi-Platform Job Harvesting
+python-jobspy>=1.1.58
+beautifulsoup4>=4.12.3
+requests>=2.32.0
+httpx>=0.27.0
+
+# LLM Providers (Google Gemini & Local Ollama)
+google-genai>=0.1.1
+google-generativeai>=0.8.0
+
+# Local Vector Storage & Embeddings (RAG)
+chromadb>=0.5.0
+sentence-transformers>=3.0.0
+
+# Browser Automation & Human-in-the-Loop Pilot
+playwright>=1.44.0
+
+# Fast API Backend (for the interactive dashboard)
+fastapi>=0.111.0
+uvicorn>=0.30.0
+
+# Testing & Quality
+pytest>=8.2.0
+pytest-asyncio>=0.23.7

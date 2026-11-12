@@ -1,0 +1,32 @@
+{
+  "non_it_keywords": [
+    "sales",
+    "telecalling",
+    "tele-caller",
+    "bpo",
+    "voice process",
+    "non-voice",
+    "customer support",
+    "collections",
+    "field executive",
+    "business development associate",
+    "bda",
+    "insurance agent",
+    "loan executive",
+    "medical billing"
+  ],
+  "unfavorable_shifts": [
+    "night shift",
+    "us shift",
+    "uk shift",
+    "graveyard shift",
+    "rotational night shift"
+  ],
+  "standard_screening_defaults": {
+    "previously_employed": "No",
+    "require_visa_sponsorship": "No",
+    "authorized_to_work_in_india": "Yes",
+    "willing_to_relocate": "Yes",
+    "comfortable_with_hybrid": "Yes"
+  }
+}

@@ -1,0 +1,72 @@
+# ==============================================================================
+# JobFlow-AI User Settings Configuration Template
+# Copy this file to 'config/settings.yaml':
+#   cp config/settings.example.yaml config/settings.yaml
+# ==============================================================================
+
+candidate:
+  name: "Your Name"
+  email: "your.email@example.com"
+  phone: "+91 9876543210"
+  city: "Hyderabad"
+  resume_path: "data/resume.pdf"
+  
+  # Professional Profile
+  current_experience_years: 0   # 0 for freshers / new graduates
+  highest_qualification: "B.Tech in Computer Science and Engineering"
+  graduation_year: 2025
+  
+  # Notice Period & Availability
+  notice_period_days: 0         # 0 for immediate joiners
+  availability_status: "Immediate"
+
+search_preferences:
+  # Target Hubs: Will apply without hesitation if IT/tech role matches
+  target_locations:
+    - "Hyderabad"
+    - "Bengaluru"
+    - "Chennai"
+    - "Pune"
+    - "Remote"
+  
+  # Pan-India Policy:
+  # If true, applies to roles across India if the interview/selection process is virtual
+  allow_pan_india_if_virtual: true
+  
+  # Daily Volume Limit (per platform to prevent bot detection)
+  daily_application_limit: 30
+
+filter_rules:
+  # Roles to STRICTLY ignore (Non-IT, Sales, Telecalling, Support)
+  ignore_role_keywords:
+    - "sales"
+    - "telecalling"
+    - "tele-caller"
+    - "bpo"
+    - "voice process"
+    - "non-voice"
+    - "customer support"
+    - "collections"
+    - "field executive"
+    - "business development associate"
+    - "bda"
+    - "insurance advisor"
+    - "accountant"
+    - "chartered accountant"
+  
+  # Shifts to STRICTLY ignore
+  ignore_shift_keywords:
+    - "night shift"
+    - "us shift"
+    - "uk shift"
+    - "graveyard shift"
+    - "rotational night"
+  
+  # Discard unpaid roles
+  ignore_unpaid_internships: true
+
+tracker:
+  # Path where your Excel tracker will be maintained
+  excel_path: "data/Job_Tracker.xlsx"
+  # Group applications with a distinct date row for each day's run
+  enable_daily_separator: true
