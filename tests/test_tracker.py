@@ -73,3 +73,4 @@ def test_log_contact():
         assert ws.max_row == 2
         assert ws.cell(row=2, column=2).value == "Wise"
         assert ws.cell(row=2, column=6).value == "Request sent"
+

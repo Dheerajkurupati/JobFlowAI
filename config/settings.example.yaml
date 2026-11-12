@@ -70,3 +70,4 @@ tracker:
   excel_path: "data/Job_Tracker.xlsx"
   # Group applications with a distinct date row for each day's run
   enable_daily_separator: true
+

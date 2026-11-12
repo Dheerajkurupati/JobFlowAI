@@ -21,3 +21,4 @@ def test_config_candidate_fields():
     config = load_config()
     assert config.candidate.availability_status == "Immediate"
     assert config.tracker.excel_path == "data/Job_Tracker.xlsx"
+

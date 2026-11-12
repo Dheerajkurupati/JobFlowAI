@@ -20,3 +20,4 @@ JobFlow-AI: Autonomous Job Application Co-Pilot (Python, FastAPI, ChromaDB, Play
 NeuralDoc: Multimodal RAG Document QA System (Python, LangChain, Streamlit)
 - Developed an interactive QA assistant querying financial reports using dense vector embeddings and Gemini Flash API.
 - Implemented chunking strategies and cosine similarity scoring reducing retrieval hallucinations by 40%.
+

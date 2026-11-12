@@ -216,3 +216,4 @@ class ExcelJobTracker:
                     max_len = len(val)
             # Add padding, with min width 12 and max 60 to prevent giant columns
             ws.column_dimensions[col_letter].width = max(min(max_len + 3, 60), 12)
+
