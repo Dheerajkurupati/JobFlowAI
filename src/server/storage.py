@@ -170,3 +170,4 @@ class CRMStorage:
             work_type=job_dict.get("work_type", "Hybrid"),
             run_date=job_dict.get("date"),
         )
+

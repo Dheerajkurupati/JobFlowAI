@@ -15,15 +15,17 @@ def test_serve_dashboard():
 
 
 def test_get_jobs_api():
-    """Verify that /api/jobs returns structured Kanban columns and stats."""
+    """Verify that /api/jobs returns structured jobs, kanban columns, and pagination."""
     response = client.get("/api/jobs")
     assert response.status_code == 200
     data = response.json()
-    assert "columns" in data
-    assert "stats" in data
-    assert "discovered" in data["columns"]
-    assert "applied" in data["columns"]
-    assert "total" in data["stats"]
+    assert "jobs" in data
+    assert "kanban" in data
+    assert "counts" in data
+    assert "pagination" in data
+    assert "discovered" in data["kanban"]
+    assert "applied" in data["kanban"]
+    assert data["pagination"]["page"] == 1
 
 
 def test_memory_api():
@@ -39,3 +41,4 @@ def test_memory_api():
     assert save_res.status_code == 200
     updated_mem = save_res.json()["memory"]
     assert updated_mem["github_portfolio"] == "https://github.com/mywork"
+
