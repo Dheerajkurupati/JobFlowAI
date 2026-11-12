@@ -45,8 +45,8 @@ class BrowserPilot:
                 email=saved_p.get("email") or self.config.candidate.email,
                 phone=saved_p.get("phone") or self.config.candidate.phone,
                 city=saved_p.get("city") or self.config.candidate.city,
-                linkedin=saved_p.get("linkedin", ""),
-                github=saved_p.get("github", ""),
+                linkedin_url=saved_p.get("linkedin", ""),
+                github_url=saved_p.get("github", ""),
                 skills=saved_p.get("skills") or ["Python", "FastAPI", "AI"],
                 primary_roles=saved_p.get("primary_roles") or ["AI Engineer"]
             )

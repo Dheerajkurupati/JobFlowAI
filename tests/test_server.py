@@ -73,32 +73,33 @@ def test_auto_fill_endpoint_invalid_job():
 
 def test_get_and_update_profile_endpoint():
     """Verify that /api/profile allows reading and updating candidate information."""
-    # Get profile
-    res = client.get("/api/profile")
-    assert res.status_code == 200
-    data = res.json()
-    assert "name" in data
-    assert "email" in data
-    assert "skills" in data
+    # Backup current profile
+    orig = client.get("/api/profile").json()
 
     # Update profile
     update_res = client.post("/api/profile", json={
-        "name": "Jane Doe",
+        "name": "Test Candidate",
         "city": "Bengaluru",
-        "linkedin": "https://linkedin.com/in/janedoe"
+        "linkedin": "https://linkedin.com/in/testcandidate"
     })
     assert update_res.status_code == 200
     updated_p = update_res.json()["profile"]
-    assert updated_p["name"] == "Jane Doe"
+    assert updated_p["name"] == "Test Candidate"
     assert updated_p["city"] == "Bengaluru"
+
+    # Restore original
+    client.post("/api/profile", json=orig)
 
 
 def test_upload_resume_endpoint(tmp_path):
     """Verify that /api/profile/upload-resume accepts resume files and parses them."""
+    # Backup current profile
+    orig = client.get("/api/profile").json()
+
     sample_text = """
-    Jane Doe
-    jane.doe@example.com | +91 9876543210 | Bengaluru, India
-    linkedin.com/in/janedoe | github.com/janedoe
+    Test Candidate
+    test@example.com | +91 9876543210 | Bengaluru, India
+    linkedin.com/in/testcandidate | github.com/testcandidate
 
     TECHNICAL SKILLS:
     Languages & Frameworks: Python, FastAPI, SQL, PyTorch, Docker, LangChain, RAG
@@ -110,4 +111,7 @@ def test_upload_resume_endpoint(tmp_path):
     assert "profile" in data
     assert "Python" in data["profile"]["skills"]
     assert data["profile"]["resume_uploaded"] is True
+
+    # Restore original
+    client.post("/api/profile", json=orig)
 

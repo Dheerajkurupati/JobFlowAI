@@ -37,6 +37,14 @@ class CandidateProfile(BaseModel):
     github_url: Optional[str] = None
     summary: Optional[str] = None
 
+    @property
+    def linkedin(self) -> str:
+        return self.linkedin_url or ""
+
+    @property
+    def github(self) -> str:
+        return self.github_url or ""
+
     education: List[Education] = Field(default_factory=list)
     skills: List[str] = Field(default_factory=list)
     projects: List[Project] = Field(default_factory=list)
