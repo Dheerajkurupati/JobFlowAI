@@ -49,3 +49,4 @@ def test_browser_pilot_safety_defaults():
     pilot = BrowserPilot()
     assert pilot.form_filler is not None
     assert pilot.profile is not None
+
