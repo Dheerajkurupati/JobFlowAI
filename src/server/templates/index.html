@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobFlow-AI : Career CRM</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f5ff',
+              100: '#e0ebff',
+              500: '#2563eb',
+              600: '#1d4ed8',
+              700: '#1e40af',
+              800: '#1b365d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .kanban-col { min-height: calc(100vh - 240px); }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-800 to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
+          JF
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-lg font-bold text-slate-900 tracking-tight">JobFlow-AI</h1>
+            <span class="px-2 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full">CRM Cockpit</span>
+          </div>
+          <p class="text-xs text-slate-500">Autonomous Job Search & Application Co-Pilot</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center space-x-3">
+        <button onclick="openMemoryModal()" class="px-3.5 py-1.5 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center space-x-1.5">
+          <span>🧠</span>
+          <span>Q&A Memory</span>
+        </button>
+
+        <a href="/data/Job_Tracker.xlsx" download class="px-3.5 py-1.5 text-sm font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors flex items-center space-x-1.5">
+          <span>📊</span>
+          <span>Open Excel Tracker</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- SUBHEADER: STATS & QUICK INGEST BAR -->
+  <div class="bg-white border-b border-slate-200 py-3.5 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- Metrics Pills -->
+      <div class="flex items-center space-x-3 text-xs w-full md:w-auto">
+        <div class="px-3 py-1.5 bg-slate-100 rounded-lg text-slate-700 font-medium">
+          Total Tracked: <span id="stat-total" class="font-bold text-slate-900">0</span>
+        </div>
+        <div class="px-3 py-1.5 bg-amber-50 text-amber-800 border border-amber-200 rounded-lg font-medium">
+          Review Needed: <span id="stat-review" class="font-bold">0</span>
+        </div>
+        <div class="px-3 py-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-lg font-medium">
+          Applied: <span id="stat-applied" class="font-bold">0</span>
+        </div>
+        <div class="px-3 py-1.5 bg-blue-50 text-blue-800 border border-blue-200 rounded-lg font-medium">
+          Interviews: <span id="stat-interviews" class="font-bold">0</span>
+        </div>
+      </div>
+
+      <!-- Quick URL Ingest Input -->
+      <form onsubmit="handleQuickIngest(event)" class="flex items-center space-x-2 w-full md:w-96">
+        <div class="relative w-full">
+          <input 
+            type="url" 
+            id="quick-url-input" 
+            placeholder="Paste any Job Link (LinkedIn, Naukri, Lever)..."
+            required
+            class="w-full text-xs px-3.5 py-2 pl-8 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+          />
+          <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs">🔗</span>
+        </div>
+        <button type="submit" id="btn-ingest" class="px-3.5 py-2 text-xs font-semibold bg-brand-800 hover:bg-blue-900 text-white rounded-lg transition-colors whitespace-nowrap shadow-sm">
+          + Ingest
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- KANBAN BOARD CANVAS -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+      
+      <!-- 1. DISCOVERED -->
+      <div class="flex flex-col bg-slate-100/80 rounded-xl p-3 border border-slate-200 kanban-col">
+        <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-200">
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Discovered</h2>
+          </div>
+          <span id="badge-discovered" class="text-xs font-semibold bg-white text-slate-600 px-2 py-0.5 rounded-full border border-slate-200">0</span>
+        </div>
+        <div id="col-discovered" class="flex-1 space-y-3 overflow-y-auto"></div>
+      </div>
+
+      <!-- 2. NEEDS INPUT -->
+      <div class="flex flex-col bg-amber-50/60 rounded-xl p-3 border border-amber-200 kanban-col">
+        <div class="flex items-center justify-between pb-2 mb-3 border-b border-amber-200">
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-amber-800">Needs Input</h2>
+          </div>
+          <span id="badge-needs_input" class="text-xs font-semibold bg-white text-amber-700 px-2 py-0.5 rounded-full border border-amber-200">0</span>
+        </div>
+        <div id="col-needs_input" class="flex-1 space-y-3 overflow-y-auto"></div>
+      </div>
+
+      <!-- 3. READY FOR REVIEW (COCKPIT) -->
+      <div class="flex flex-col bg-blue-50/60 rounded-xl p-3 border border-blue-200 kanban-col">
+        <div class="flex items-center justify-between pb-2 mb-3 border-b border-blue-200">
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-blue-900">Review Mode</h2>
+          </div>
+          <span id="badge-review" class="text-xs font-semibold bg-white text-blue-800 px-2 py-0.5 rounded-full border border-blue-200">0</span>
+        </div>
+        <div id="col-review" class="flex-1 space-y-3 overflow-y-auto"></div>
+      </div>
+
+      <!-- 4. APPLIED -->
+      <div class="flex flex-col bg-emerald-50/60 rounded-xl p-3 border border-emerald-200 kanban-col">
+        <div class="flex items-center justify-between pb-2 mb-3 border-b border-emerald-200">
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-emerald-900">Applied</h2>
+          </div>
+          <span id="badge-applied" class="text-xs font-semibold bg-white text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-200">0</span>
+        </div>
+        <div id="col-applied" class="flex-1 space-y-3 overflow-y-auto"></div>
+      </div>
+
+      <!-- 5. INTERVIEW / ASSESSMENT -->
+      <div class="flex flex-col bg-indigo-50/60 rounded-xl p-3 border border-indigo-200 kanban-col">
+        <div class="flex items-center justify-between pb-2 mb-3 border-b border-indigo-200">
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-900">Interviews</h2>
+          </div>
+          <span id="badge-interview" class="text-xs font-semibold bg-white text-indigo-800 px-2 py-0.5 rounded-full border border-indigo-200">0</span>
+        </div>
+        <div id="col-interview" class="flex-1 space-y-3 overflow-y-auto"></div>
+      </div>
+
+      <!-- 6. REJECTED / ARCHIVED -->
+      <div class="flex flex-col bg-slate-100/60 rounded-xl p-3 border border-slate-200 kanban-col">
+        <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-200">
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-600">Archived</h2>
+          </div>
+          <span id="badge-rejected" class="text-xs font-semibold bg-white text-slate-500 px-2 py-0.5 rounded-full border border-slate-200">0</span>
+        </div>
+        <div id="col-rejected" class="flex-1 space-y-3 overflow-y-auto"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- COCKPIT REVIEW DRAWER MODAL -->
+  <div id="review-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-start justify-between border-b pb-3">
+        <div>
+          <span id="modal-match-badge" class="px-2 py-0.5 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800">88% Match</span>
+          <h3 id="modal-job-title" class="text-lg font-bold text-slate-900 mt-1">Role Title</h3>
+          <p id="modal-company" class="text-xs font-medium text-slate-500">Company Name</p>
+        </div>
+        <button onclick="closeReviewModal()" class="text-slate-400 hover:text-slate-700 text-xl font-bold">×</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <h4 class="font-bold text-slate-700 uppercase tracking-wider mb-1">Pre-filled Screening Summary:</h4>
+          <p id="modal-screening-notes" class="p-3 bg-slate-50 rounded-lg text-slate-800 border border-slate-200"></p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-700 uppercase tracking-wider mb-1">Matched Skills:</h4>
+          <div id="modal-matched-skills" class="flex flex-wrap gap-1.5"></div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-700 uppercase tracking-wider mb-1">Application URL:</h4>
+          <a id="modal-job-link" href="#" target="_blank" class="text-blue-600 hover:underline break-all"></a>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="pt-4 border-t flex items-center justify-between">
+        <button onclick="openOutreachFromModal()" class="px-4 py-2 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">
+          ✉️ View Recruiter Cold DM
+        </button>
+        <div class="flex space-x-2">
+          <button onclick="closeReviewModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Cancel</button>
+          <button id="btn-approve-submit" onclick="executeApproval()" class="px-5 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-sm transition-all">
+            👉 Approve & Mark Applied
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q&A MEMORY VAULT MODAL -->
+  <div id="memory-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">🧠 Permanent Q&A Memory Vault</h3>
+          <p class="text-xs text-slate-500">The agent remembers these answers so it never asks you twice.</p>
+        </div>
+        <button onclick="closeMemoryModal()" class="text-slate-400 hover:text-slate-700 text-xl font-bold">×</button>
+      </div>
+
+      <div id="memory-list" class="space-y-2.5 overflow-y-auto flex-1 pr-1 text-xs"></div>
+
+      <!-- Add New Question Box -->
+      <form onsubmit="handleSaveMemory(event)" class="border-t pt-3 flex gap-2">
+        <input type="text" id="new-mem-key" placeholder="Question / Field Name" required class="flex-1 text-xs px-3 py-2 bg-slate-50 border rounded-lg focus:ring-1 focus:ring-blue-500" />
+        <input type="text" id="new-mem-val" placeholder="Your Answer" required class="flex-1 text-xs px-3 py-2 bg-slate-50 border rounded-lg focus:ring-1 focus:ring-blue-500" />
+        <button type="submit" class="px-4 py-2 text-xs font-semibold bg-brand-800 hover:bg-blue-900 text-white rounded-lg">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- OUTREACH MODAL -->
+  <div id="outreach-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">✉️ Tailored Recruiter Outreach</h3>
+          <p class="text-xs text-slate-500">Personalized cold message highlighting your matching projects.</p>
+        </div>
+        <button onclick="closeOutreachModal()" class="text-slate-400 hover:text-slate-700 text-xl font-bold">×</button>
+      </div>
+
+      <textarea id="outreach-text" rows="8" readonly class="w-full text-xs p-3 bg-slate-50 border rounded-lg font-mono focus:outline-none"></textarea>
+
+      <div class="flex justify-end space-x-2">
+        <button onclick="closeOutreachModal()" class="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded-lg">Close</button>
+        <button onclick="copyOutreach()" id="btn-copy-outreach" class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg">
+          📋 Copy to Clipboard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT CRM CONTROLLER -->
+  <script>
+    let activeJob = null;
+
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/api/jobs');
+        const data = await res.json();
+
+        // Update stats
+        document.getElementById('stat-total').innerText = data.stats.total;
+        document.getElementById('stat-review').innerText = data.stats.review;
+        document.getElementById('stat-applied').innerText = data.stats.applied;
+        document.getElementById('stat-interviews').innerText = data.stats.interviews;
+
+        // Render each column
+        for (const [colName, jobs] of Object.entries(data.columns)) {
+          const colEl = document.getElementById(`col-${colName}`);
+          const badgeEl = document.getElementById(`badge-${colName}`);
+          if (badgeEl) badgeEl.innerText = jobs.length;
+          if (!colEl) continue;
+
+          colEl.innerHTML = '';
+          jobs.forEach(job => {
+            colEl.appendChild(createJobCard(job));
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load dashboard:', err);
+      }
+    }
+
+    function createJobCard(job) {
+      const card = document.createElement('div');
+      card.className = "bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-sm hover:shadow-md transition-all space-y-2.5 cursor-pointer";
+      card.onclick = () => openReviewModal(job);
+
+      const matchColor = job.match_score >= 85 ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800';
+
+      card.innerHTML = `
+        <div class="flex items-start justify-between gap-1">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">${escapeHtml(job.company)}</span>
+            <h4 class="text-xs font-bold text-slate-900 leading-snug line-clamp-2">${escapeHtml(job.title)}</h4>
+          </div>
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${matchColor}">${job.match_score}%</span>
+        </div>
+
+        <div class="flex items-center text-[11px] text-slate-500 space-x-2">
+          <span>📍 ${escapeHtml(job.location)}</span>
+          <span>•</span>
+          <span>💼 ${escapeHtml(job.work_type)}</span>
+        </div>
+
+        <div class="flex items-center justify-between pt-1 border-t border-slate-100 text-[11px]">
+          <span class="text-slate-400">${job.date}</span>
+          <button onclick="event.stopPropagation(); moveToNext('${job.id}', '${job.status}')" class="font-semibold text-blue-600 hover:text-blue-800">
+            ${getActionLabel(job.status)} →
+          </button>
+        </div>
+      `;
+      return card;
+    }
+
+    function getActionLabel(status) {
+      if (status === 'discovered') return 'Review';
+      if (status === 'needs_input') return 'Answer';
+      if (status === 'review') return 'Apply';
+      if (status === 'applied') return 'Move to Interview';
+      if (status === 'interview') return 'Offer';
+      return 'Archive';
+    }
+
+    async function moveToNext(jobId, currentStatus) {
+      const nextMap = {
+        'discovered': 'review',
+        'needs_input': 'review',
+        'review': 'applied',
+        'applied': 'interview',
+        'interview': 'applied'
+      };
+      const nextStatus = nextMap[currentStatus] || 'applied';
+
+      await fetch(`/api/jobs/${jobId}/status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: nextStatus })
+      });
+      loadDashboard();
+    }
+
+    async function handleQuickIngest(e) {
+      e.preventDefault();
+      const input = document.getElementById('quick-url-input');
+      const btn = document.getElementById('btn-ingest');
+      const url = input.value.trim();
+      if (!url) return;
+
+      btn.innerText = 'Analyzing...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/jobs/quick-ingest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+        if (res.ok) {
+          input.value = '';
+          loadDashboard();
+        } else {
+          alert('Failed to parse URL. Please check the link.');
+        }
+      } catch (err) {
+        alert('Network error parsing URL.');
+      } finally {
+        btn.innerText = '+ Ingest';
+        btn.disabled = false;
+      }
+    }
+
+    function openReviewModal(job) {
+      activeJob = job;
+      document.getElementById('modal-job-title').innerText = job.title;
+      document.getElementById('modal-company').innerText = job.company;
+      document.getElementById('modal-match-badge').innerText = `${job.match_score}% Match`;
+      document.getElementById('modal-screening-notes').innerText = job.screening_notes || 'All requirements match profile.';
+
+      const linkEl = document.getElementById('modal-job-link');
+      linkEl.href = job.job_link;
+      linkEl.innerText = job.job_link;
+
+      const skillsEl = document.getElementById('modal-matched-skills');
+      skillsEl.innerHTML = '';
+      (job.matched_skills || []).forEach(s => {
+        const badge = document.createElement('span');
+        badge.className = 'px-2 py-0.5 bg-blue-50 text-blue-700 font-semibold rounded text-[11px] border border-blue-200';
+        badge.innerText = s;
+        skillsEl.appendChild(badge);
+      });
+
+      document.getElementById('review-modal').classList.remove('hidden');
+    }
+
+    function closeReviewModal() {
+      document.getElementById('review-modal').classList.add('hidden');
+    }
+
+    async function executeApproval() {
+      if (!activeJob) return;
+      await fetch(`/api/jobs/${activeJob.id}/approve`, { method: 'POST' });
+      closeReviewModal();
+      loadDashboard();
+    }
+
+    async function openOutreachFromModal() {
+      if (!activeJob) return;
+      const res = await fetch(`/api/jobs/${activeJob.id}/outreach`, { method: 'POST' });
+      const data = await res.json();
+      document.getElementById('outreach-text').value = data.outreach_draft;
+      document.getElementById('outreach-modal').classList.remove('hidden');
+    }
+
+    function closeOutreachModal() {
+      document.getElementById('outreach-modal').classList.add('hidden');
+    }
+
+    function copyOutreach() {
+      const text = document.getElementById('outreach-text');
+      text.select();
+      navigator.clipboard.writeText(text.value);
+      const btn = document.getElementById('btn-copy-outreach');
+      btn.innerText = '✅ Copied!';
+      setTimeout(() => { btn.innerText = '📋 Copy to Clipboard'; }, 2000);
+    }
+
+    async function openMemoryModal() {
+      const res = await fetch('/api/memory');
+      const data = await res.json();
+      const listEl = document.getElementById('memory-list');
+      listEl.innerHTML = '';
+
+      for (const [k, v] of Object.entries(data)) {
+        const item = document.createElement('div');
+        item.className = 'p-2.5 bg-slate-50 border rounded-lg flex items-center justify-between gap-2';
+        item.innerHTML = `
+          <div>
+            <span class="font-bold text-slate-800 capitalize">${k.replace(/_/g, ' ')}</span>
+            <p class="text-slate-600 mt-0.5">${escapeHtml(v)}</p>
+          </div>
+        `;
+        listEl.appendChild(item);
+      }
+      document.getElementById('memory-modal').classList.remove('hidden');
+    }
+
+    function closeMemoryModal() {
+      document.getElementById('memory-modal').classList.add('hidden');
+    }
+
+    async function handleSaveMemory(e) {
+      e.preventDefault();
+      const key = document.getElementById('new-mem-key').value;
+      const val = document.getElementById('new-mem-val').value;
+      await fetch('/api/memory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value: val })
+      });
+      document.getElementById('new-mem-key').value = '';
+      document.getElementById('new-mem-val').value = '';
+      openMemoryModal();
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      }[tag] || tag));
+    }
+
+    // Initial boot
+    loadDashboard();
+  </script>
+</body>
+</html>

@@ -9,7 +9,8 @@ data/*.pdf
 data/*.docx
 data/*.xlsx
 data/*.csv
-data/screening_memory.json
+data/*.json
+!data/crm_jobs.example.json
 data/vector_store/
 data/cache/
 *.pdf

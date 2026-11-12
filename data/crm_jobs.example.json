@@ -1,0 +1,19 @@
+[
+  {
+    "id": "job-sample-1",
+    "date": "2026-11-12",
+    "company": "Cognizant",
+    "title": "Junior AI / Python Developer",
+    "location": "Hyderabad",
+    "work_type": "Hybrid",
+    "job_link": "https://www.naukri.com/job-listings-sample",
+    "status": "applied",
+    "match_score": 88,
+    "matched_skills": ["Python", "FastAPI", "LangChain", "SQL"],
+    "missing_skills": ["Docker in production"],
+    "screening_notes": "88% Match, FastAPI + LangChain match. Screening: Notice = Immediate, Previously employed = No.",
+    "recruiter_name": "Priya Sharma",
+    "recruiter_url": "https://www.linkedin.com/in/recruiter-sample",
+    "outreach_draft": "Hi Priya, I noticed Cognizant is hiring a Junior AI/Python Developer in Hyderabad. I recently built JobFlow-AI with FastAPI and LangChain, matching the requirements closely. Would love to connect!"
+  }
+]
