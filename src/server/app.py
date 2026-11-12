@@ -36,6 +36,16 @@ class MemoryUpdateRequest(BaseModel):
     value: str
 
 
+class AutoFillRequest(BaseModel):
+    headless: bool = False
+    pause_for_review: bool = True
+    review_timeout_seconds: int = 15
+
+
+class EmailSyncRequest(BaseModel):
+    simulate: bool = False
+
+
 @app.get("/", response_class=HTMLResponse)
 async def serve_dashboard(request: Request):
     """Render the enterprise CRM Dashboard."""
@@ -297,3 +307,63 @@ async def export_excel():
         filename="Job_Tracker.xlsx",
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
+
+@app.post("/api/jobs/{job_id}/auto-fill")
+async def auto_fill_job(job_id: str, req: Optional[AutoFillRequest] = None):
+    """Run Playwright autonomous browser form-filler with safety pause for user review."""
+    from src.agent.browser_pilot import BrowserPilot
+
+    jobs = storage.get_all_jobs()
+    target = next((j for j in jobs if j["id"] == job_id), None)
+    if not target:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    job_url = target.get("job_link", "")
+    if not job_url or not job_url.startswith("http"):
+        raise HTTPException(status_code=400, detail="Job has no valid application link")
+
+    options = req or AutoFillRequest()
+    pilot = BrowserPilot(config=config)
+
+    result = await pilot.run_application(
+        job_url=job_url,
+        headless=options.headless,
+        pause_for_review=options.pause_for_review,
+        review_timeout_seconds=options.review_timeout_seconds
+    )
+
+    # Update CRM status if unanswered questions or review ready
+    new_status = target.get("status", "review")
+    if result.status == "needs_user_input":
+        new_status = "needs_input"
+    elif result.status in ["ready_for_review", "submitted"]:
+        new_status = "review"
+
+    audit_note = f"Auto-fill: {len(result.fields_filled)} fields populated. {result.audit_notes}"
+    current_notes = target.get("screening_notes", "")
+    storage.update_job_status(job_id, new_status, f"{current_notes} | {audit_note}")
+
+    return {
+        "message": "Auto-fill pass complete",
+        "result": result.model_dump()
+    }
+
+
+@app.post("/api/email-sync")
+async def sync_emails(req: Optional[EmailSyncRequest] = None):
+    """Sync recruiter replies, interview invites, coding assessments, and rejections into CRM."""
+    from src.brain.email_feedback import EmailFeedbackEngine
+
+    simulate = req.simulate if req else False
+    engine = EmailFeedbackEngine(storage=storage)
+
+    if simulate:
+        results = engine.sync_simulated_feedback()
+    else:
+        results = engine.sync_live_inbox()
+
+    return {
+        "message": f"Processed {len(results)} email loop events",
+        "events": [r.model_dump() for r in results]
+    }

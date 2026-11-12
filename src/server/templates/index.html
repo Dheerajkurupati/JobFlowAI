@@ -139,6 +139,17 @@
           <span>Hunt Today's Jobs</span>
         </button>
 
+        <!-- Closed-Loop Recruiter Replies Sync -->
+        <div class="relative inline-flex items-center">
+          <button onclick="triggerEmailSync(false)" id="btn-email-sync" title="Sync recruiter replies, interview invites, coding assessments" class="px-3 py-1.5 text-xs font-semibold text-slate-800 bg-white hover:bg-slate-50 border border-slate-300 rounded-l-lg shadow-sm transition-all flex items-center space-x-1.5">
+            <span>📩</span>
+            <span>Sync Replies</span>
+          </button>
+          <button onclick="triggerEmailSync(true)" title="Simulate recruiter reply for testing the loop mechanism" class="px-2 py-1.5 text-xs font-bold text-slate-500 bg-slate-50 hover:bg-slate-100 hover:text-slate-800 border-y border-r border-slate-300 rounded-r-lg transition-all">
+            🧪
+          </button>
+        </div>
+
         <!-- Q&A Memory Vault -->
         <button onclick="openMemoryModal()" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg shadow-sm transition-all flex items-center space-x-1.5">
           <span class="w-2 h-2 rounded-full bg-blue-600"></span>
@@ -447,6 +458,25 @@
           Generate DM
         </button>
       </div>
+
+      <!-- Autonomous Browser Pilot (Playwright) with Human-in-the-Loop Safety -->
+      <div class="p-4 bg-emerald-50/70 rounded-lg border border-emerald-200/80 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <h5 class="font-bold text-emerald-950 text-xs">Autonomous Browser Auto-Fill</h5>
+          </div>
+          <span class="text-[10px] font-mono font-bold bg-white text-emerald-800 px-2 py-0.5 rounded border border-emerald-300">HITL Safety Stop</span>
+        </div>
+        <p class="text-[11px] text-emerald-900 leading-relaxed font-normal">
+          Launches visible Chromium, populates candidate details, highlights filled inputs in green, and halts before the Submit button for your safety review.
+        </p>
+        <button onclick="executeBrowserAutoFill()" id="btn-browser-autofill" class="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md font-bold text-xs shadow-sm transition-all flex items-center justify-center space-x-1.5">
+          <span>⚡</span>
+          <span>Launch Browser Auto-Fill Pilot</span>
+        </button>
+        <div id="autofill-feedback" class="hidden text-xs p-3 bg-white rounded-md border border-emerald-200 text-slate-800 space-y-1.5"></div>
+      </div>
     </div>
 
     <!-- Drawer Footer Actions -->
@@ -747,6 +777,17 @@
         skillsEl.appendChild(badge);
       });
 
+      const fb = document.getElementById('autofill-feedback');
+      if (fb) {
+        fb.classList.add('hidden');
+        fb.innerHTML = '';
+      }
+      const afBtn = document.getElementById('btn-browser-autofill');
+      if (afBtn) {
+        afBtn.disabled = false;
+        afBtn.innerHTML = '<span>⚡</span><span>Launch Browser Auto-Fill Pilot</span>';
+      }
+
       document.getElementById('drawer-backdrop').classList.remove('hidden');
       document.getElementById('cockpit-drawer').classList.remove('translate-x-full');
     }
@@ -887,6 +928,105 @@
       document.getElementById('new-mem-key').value = '';
       document.getElementById('new-mem-val').value = '';
       openMemoryModal();
+    }
+
+    // Autonomous Browser Pilot Execution
+    async function executeBrowserAutoFill() {
+      if (!activeDrawerJob) return;
+      const btn = document.getElementById('btn-browser-autofill');
+      const feedback = document.getElementById('autofill-feedback');
+      
+      btn.disabled = true;
+      btn.innerHTML = `<span class="inline-block animate-spin mr-1.5">⏳</span><span>Auto-Filling in Visible Chromium...</span>`;
+      feedback.classList.remove('hidden');
+      feedback.innerHTML = `
+        <div class="flex items-center space-x-2 text-emerald-800 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span>Pilot launched: Opening browser, filling personal details, matching screening answers...</span>
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`/api/jobs/${activeDrawerJob.id}/auto-fill`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            headless: false,
+            pause_for_review: true,
+            review_timeout_seconds: 15
+          })
+        });
+        const data = await res.json();
+        const r = data.result || {};
+
+        if (r.status === 'blocked_login') {
+          feedback.innerHTML = `
+            <div class="p-2.5 bg-amber-50 border border-amber-200 rounded-md text-amber-900 font-medium">
+              🔒 <strong>Sign-in / Gate Detected:</strong> ${escapeHtml(r.audit_notes)}
+            </div>
+          `;
+        } else if (r.status === 'needs_user_input') {
+          feedback.innerHTML = `
+            <div class="p-2.5 bg-amber-50 border border-amber-200 rounded-md text-amber-900 space-y-1">
+              <div class="font-bold">⚠️ Form Partially Filled (${(r.fields_filled || []).length} inputs). Needs Your Input:</div>
+              <ul class="list-disc pl-4 text-[11px] space-y-0.5">
+                ${(r.unanswered_questions || []).map(q => `<li>${escapeHtml(q)}</li>`).join('')}
+              </ul>
+              <p class="text-[10px] text-amber-700 mt-1">Please answer directly in the browser window or save to Memory Vault.</p>
+            </div>
+          `;
+        } else {
+          feedback.innerHTML = `
+            <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-md text-emerald-900 space-y-1.5">
+              <div class="font-bold flex items-center space-x-1.5 text-xs">
+                <span>✅</span>
+                <span>Pre-Filled ${(r.fields_filled || []).length} Fields Successfully!</span>
+              </div>
+              <p class="text-[11px] text-emerald-800 leading-snug">${escapeHtml(r.audit_notes)}</p>
+              <div class="text-[10px] text-slate-500 font-medium pt-1 border-t border-emerald-200/60">
+                Inputs highlighted in green. Inspect them on your screen and click <strong>Submit</strong> manually.
+              </div>
+            </div>
+          `;
+        }
+        loadData();
+      } catch (err) {
+        feedback.innerHTML = `<div class="p-2 bg-rose-50 border border-rose-200 rounded text-rose-800 font-medium">Error running pilot: ${err}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>⚡</span><span>Re-Run Auto-Fill Pilot</span>`;
+      }
+    }
+
+    // Closed-Loop Email Feedback Sync
+    async function triggerEmailSync(simulate = false) {
+      const btn = document.getElementById('btn-email-sync');
+      const origText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span>⏳</span><span>Syncing...</span>`;
+
+      try {
+        const res = await fetch('/api/email-sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ simulate: simulate })
+        });
+        const data = await res.json();
+        const events = data.events || [];
+        
+        if (events.length > 0) {
+          const summary = events.map(e => `• ${e.company}: ${e.status_label}`).join('\n');
+          alert(`📬 Closed-Loop Recruiter Updates Received!\n\n${summary}\n\nStatuses & Excel tracker synchronized.`);
+        } else {
+          alert('📬 Inbox checked: No new recruiter updates found at this time.');
+        }
+        loadData();
+      } catch (err) {
+        alert('Could not sync email replies: ' + err);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = origText;
+      }
     }
 
     function escapeHtml(str) {

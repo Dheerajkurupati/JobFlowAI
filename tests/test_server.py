@@ -54,3 +54,19 @@ def test_harvest_endpoint_exists():
         assert response.json()["message"] == "Harvest complete"
         assert response.json()["summary"]["accepted"] == 8
 
+
+def test_email_sync_endpoint():
+    """Verify that /api/email-sync processes simulated or live emails."""
+    res = client.post("/api/email-sync", json={"simulate": True})
+    assert res.status_code == 200
+    data = res.json()
+    assert "message" in data
+    assert "events" in data
+    assert isinstance(data["events"], list)
+
+
+def test_auto_fill_endpoint_invalid_job():
+    """Verify that auto-fill returns 404 for unknown job."""
+    res = client.post("/api/jobs/nonexistent-id/auto-fill", json={"headless": True})
+    assert res.status_code == 404
+

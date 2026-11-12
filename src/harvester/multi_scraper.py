@@ -38,8 +38,18 @@ def harvest_jobs_across_platforms(
     storage = CRMStorage()
     existing_links = storage.excel_tracker.get_existing_job_links()
 
-    # Supported platforms in JobSpy
-    target_platforms = platforms or ["linkedin", "indeed", "glassdoor", "ziprecruiter"]
+    # Supported platforms with safe normalization
+    platform_map = {
+        "linkedin": "linkedin",
+        "indeed": "indeed",
+        "glassdoor": "glassdoor",
+        "ziprecruiter": "zip_recruiter",
+        "zip_recruiter": "zip_recruiter",
+        "naukri": "naukri",
+        "google": "google"
+    }
+    raw_platforms = platforms or ["linkedin", "indeed", "glassdoor", "ziprecruiter"]
+    target_platforms = [platform_map.get(p.lower(), p) for p in raw_platforms]
 
     # Ingest profile to get dynamic role search titles
     resume_path = cfg.candidate.resume_path
@@ -158,3 +168,4 @@ def harvest_jobs_across_platforms(
             continue
 
     return summary
+

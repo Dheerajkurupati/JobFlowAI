@@ -69,3 +69,4 @@ def is_job_acceptable(
         is_accepted=False,
         rejection_reason=f"Location outside preferred hubs: '{location}'"
     )
+

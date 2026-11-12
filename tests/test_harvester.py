@@ -65,3 +65,4 @@ def test_accept_remote_role():
         search_prefs=search_prefs
     )
     assert decision.is_accepted is True
+
