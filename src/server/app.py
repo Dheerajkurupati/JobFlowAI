@@ -159,10 +159,41 @@ async def quick_ingest_job(req: QuickIngestRequest):
         if domain_match:
             company = domain_match.group(1).split(".")[0].capitalize()
 
-    tech_keywords = ["python", "fastapi", "rag", "llm", "langchain", "sql", "docker", "pytorch", "pandas"]
-    matched = [k.capitalize() for k in tech_keywords if k in raw_text] or ["Python", "FastAPI"]
-    missing = ["Kubernetes"] if "kubernetes" in raw_text else []
-    match_score = min(max(70 + len(matched) * 4, 75), 94)
+    # Dynamic Keyword & Match Evaluation via Brain Matcher
+    from src.brain.matcher import calculate_ats_match
+    from src.parser.pdf_reader import parse_resume_to_profile
+
+    # Load candidate profile
+    resume_path = Path(config.candidate.resume_path)
+    if not resume_path.exists():
+        resume_path = Path("data/sample_resume.txt")
+
+    try:
+        profile = parse_resume_to_profile(str(resume_path))
+    except Exception:
+        profile = None
+
+    if profile:
+        match_res = calculate_ats_match(profile, raw_text, raw_text)
+        matched = match_res.matched_skills
+        missing = match_res.missing_skills
+        match_score = match_res.match_score
+        ctc_response = match_res.suggested_ctc_response
+        roadmap_notes = " | ".join(match_res.learning_roadmap[:2])
+    else:
+        tech_keywords = ["python", "fastapi", "rag", "llm", "langchain", "sql", "docker", "pytorch", "pandas"]
+        matched = [k.capitalize() for k in tech_keywords if k in raw_text] or ["Python", "FastAPI"]
+        missing = ["Kubernetes"] if "kubernetes" in raw_text else []
+        match_score = min(max(70 + len(matched) * 4, 75), 94)
+        ctc_response = "Negotiable / As per company budget"
+        roadmap_notes = ""
+
+    screening_notes = (
+        f"ATS Match: {match_score}%. Matched: {', '.join(matched[:4])}. "
+        f"Expected CTC: {ctc_response}. Notice: Immediate."
+    )
+    if roadmap_notes:
+        screening_notes += f" Prep Tip: {roadmap_notes}"
 
     new_job = JobItem(
         id=f"job-{uuid.uuid4().hex[:6]}",
@@ -176,7 +207,7 @@ async def quick_ingest_job(req: QuickIngestRequest):
         match_score=match_score,
         matched_skills=matched,
         missing_skills=missing,
-        screening_notes=f"Auto-parsed. {match_score}% Match. Skills: {', '.join(matched)}. Notice: Immediate.",
+        screening_notes=screening_notes,
         recruiter_name=None,
         recruiter_url=None,
         outreach_draft=f"Hi Hiring Team at {company},\n\nI noticed your opening for {title} in {location}. With hands-on experience in {', '.join(matched[:3])}, I would love to connect and share my portfolio.\n\nBest,\n{config.candidate.name}"
