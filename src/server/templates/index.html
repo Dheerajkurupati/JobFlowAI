@@ -8,7 +8,7 @@
   <!-- Premium Executive Typography: Inter & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -16,7 +16,7 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['"Inter"', '"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
             display: ['"Plus Jakarta Sans"', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace'],
           },
@@ -36,34 +36,50 @@
   </script>
 
   <style>
-    /* Professional Corporate Design System (Stripe / Linear / Apple HIG) */
+    /* ========================================================================== */
+    /* MILLION-DOLLAR EXECUTIVE DESIGN SYSTEM (Linear + Stripe + Apple HIG)       */
+    /* ========================================================================== */
     :root {
       --spring-easing: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: #0f172a;
+      color: #090d16;
       background-color: #f8fafc;
+      font-feature-settings: 'cv02' 1, 'cv03' 1, 'cv04' 1, 'cv11' 1, 'tnum' 1;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle background grid pattern */
+    .bg-grid-subtle {
+      background-image: radial-gradient(rgba(15, 23, 42, 0.06) 1px, transparent 0);
+      background-size: 24px 24px;
     }
 
     /* Emil Kowalski: Instant button press feedback */
     button, a[role="button"] {
-      transition: transform 100ms var(--spring-easing), background-color 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out;
+      transition: transform 90ms var(--spring-easing), background-color 120ms ease-out, border-color 120ms ease-out, box-shadow 120ms ease-out;
     }
     button:active, a[role="button"]:active {
-      transform: scale(0.98) !important;
+      transform: scale(0.985) !important;
     }
 
-    /* Subtle row hover */
+    /* High-end micro borders & specular highlights */
+    .glass-surface {
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.02), inset 0 1px 0 0 rgba(255, 255, 255, 0.85);
+    }
+
     .table-row-hover {
-      transition: background-color 120ms ease-out;
+      transition: background-color 100ms ease-out;
     }
     .table-row-hover:hover {
       background-color: #f8fafc;
     }
 
-    /* Custom thin scrollbar */
+    /* Thin elegant scrollbar */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
@@ -71,103 +87,104 @@
   </style>
 </head>
 
-<body class="h-full flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+<body class="h-full flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900 bg-grid-subtle">
 
   <!-- ========================================================================= -->
-  <!-- 1. EXECUTIVE APPLICATION HEADER                                           -->
+  <!-- 1. EXECUTIVE COMMAND BAR HEADER                                           -->
   <!-- ========================================================================= -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 px-6 py-3.5 shrink-0 shadow-sm">
-    <div class="max-w-[1680px] mx-auto flex items-center justify-between gap-6">
+  <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 px-6 py-3 shrink-0 shadow-[0_1px_2px_0_rgba(0,0,0,0.02)]">
+    <div class="max-w-[1720px] mx-auto flex items-center justify-between gap-6">
       
-      <!-- Brand & Title -->
+      <!-- Left: Monogram Brand & View Switcher -->
       <div class="flex items-center space-x-6">
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="location.reload()">
-          <div class="w-9 h-9 rounded-lg bg-slate-900 flex items-center justify-center text-white font-bold text-sm tracking-tight shadow-sm">
-            JF
+        <div class="flex items-center space-x-3 cursor-pointer group" onclick="location.reload()">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-b from-slate-900 to-slate-950 flex items-center justify-center text-white font-bold text-xs tracking-wider shadow-sm group-hover:scale-105 transition-transform border border-slate-800">
+            <span class="font-mono">JF</span>
           </div>
           <div>
             <div class="flex items-center space-x-2">
-              <span class="font-display font-bold text-slate-900 tracking-tight text-sm">JobFlow<span class="text-blue-600">.ai</span></span>
-              <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 uppercase">Enterprise</span>
+              <span class="font-display font-extrabold text-slate-950 tracking-tight text-sm">JobFlow<span class="text-blue-600">.ai</span></span>
+              <span class="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 uppercase tracking-wide">OS v2.4</span>
             </div>
-            <p class="text-[11px] text-slate-500 font-medium">Autonomous Job Search & Application Management</p>
+            <p class="text-[11px] text-slate-500 font-medium">Autonomous Career Operating System</p>
           </div>
         </div>
 
-        <!-- Segmented View Mode Toggle -->
-        <div class="hidden sm:flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+        <!-- Segmented Table / Pipeline Toggle -->
+        <div class="hidden sm:flex items-center bg-slate-100/90 p-0.5 rounded-lg border border-slate-200/80">
           <button onclick="setViewMode('table')" id="btn-view-table" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-white text-slate-900 shadow-sm transition-all flex items-center space-x-1.5">
-            <svg class="w-3.5 h-3.5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+            <svg class="w-3.5 h-3.5 text-slate-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
             <span>Table View</span>
           </button>
           <button onclick="setViewMode('kanban')" id="btn-view-kanban" class="px-3 py-1.5 text-xs font-medium rounded-md text-slate-600 hover:text-slate-900 transition-all flex items-center space-x-1.5">
-            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
-            <span>Board View</span>
+            <svg class="w-3.5 h-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+            <span>Pipeline Board</span>
           </button>
         </div>
       </div>
 
-      <!-- Quick Job Link Ingest Input -->
+      <!-- Center: Raycast-Style Fast Ingest Input -->
       <form onsubmit="handleQuickIngest(event)" class="flex-1 max-w-xl hidden md:flex items-center relative">
         <div class="relative w-full flex items-center">
           <div class="absolute left-3.5 text-slate-400">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
           <input 
             type="url" 
             id="quick-url-input" 
-            placeholder="Paste any job posting URL to analyze & auto-fill..." 
+            placeholder="Paste any LinkedIn, Indeed, Glassdoor, or Naukri URL to analyze..." 
             required
-            class="w-full text-xs pl-10 pr-24 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-900 placeholder:text-slate-400 transition-all"
+            class="w-full text-xs pl-10 pr-24 py-2 bg-slate-50 border border-slate-300/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white text-slate-900 placeholder:text-slate-400 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]"
           />
           <button 
             type="submit" 
             id="btn-ingest"
-            class="absolute right-1 px-3 py-1.5 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white rounded-md shadow-sm transition-all"
+            class="absolute right-1 px-3 py-1.5 text-xs font-semibold bg-slate-950 hover:bg-slate-800 text-white rounded-md shadow-sm transition-all flex items-center space-x-1"
           >
-            + Ingest
+            <span>Ingest</span>
+            <span class="text-[10px] opacity-60 font-mono">↵</span>
           </button>
         </div>
       </form>
 
-      <!-- Right Utility Actions -->
-      <div class="flex items-center space-x-2.5">
+      <!-- Right: Primary Action Toolbar -->
+      <div class="flex items-center space-x-2">
         
-        <!-- Live Hunting Button -->
+        <!-- 1. Harvest Button -->
         <button onclick="triggerHarvest()" id="btn-harvest" class="px-3.5 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-all flex items-center space-x-1.5">
-          <span>⚡</span>
-          <span>Hunt Today's Jobs</span>
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Harvest Pipeline</span>
         </button>
 
-        <!-- Closed-Loop Recruiter Replies Sync -->
-        <div class="relative inline-flex items-center">
-          <button onclick="triggerEmailSync(false)" id="btn-email-sync" title="Sync recruiter replies, interview invites, coding assessments" class="px-3 py-1.5 text-xs font-semibold text-slate-800 bg-white hover:bg-slate-50 border border-slate-300 rounded-l-lg shadow-sm transition-all flex items-center space-x-1.5">
-            <span>📩</span>
-            <span>Sync Replies</span>
+        <!-- 2. Recruiter Loop Sync -->
+        <div class="relative inline-flex items-center rounded-lg shadow-sm border border-slate-300/80 bg-white">
+          <button onclick="triggerEmailSync(false)" id="btn-email-sync" title="Scan inbox for interview invitations, coding assessments, and status updates" class="px-3 py-1.5 text-xs font-semibold text-slate-800 hover:bg-slate-50 transition-all flex items-center space-x-1.5 rounded-l-lg">
+            <svg class="w-3.5 h-3.5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Sync Inbound</span>
           </button>
-          <button onclick="triggerEmailSync(true)" title="Simulate recruiter reply for testing the loop mechanism" class="px-2 py-1.5 text-xs font-bold text-slate-500 bg-slate-50 hover:bg-slate-100 hover:text-slate-800 border-y border-r border-slate-300 rounded-r-lg transition-all">
-            🧪
+          <button onclick="triggerEmailSync(true)" title="Run loop feedback simulation" class="px-2 py-1.5 text-xs font-bold text-slate-400 hover:text-slate-800 hover:bg-slate-100 border-l border-slate-200 transition-all rounded-r-lg">
+            Test
           </button>
         </div>
 
-        <!-- Q&A Memory Vault -->
-        <button onclick="openMemoryModal()" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg shadow-sm transition-all flex items-center space-x-1.5">
-          <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+        <!-- 3. Memory Vault -->
+        <button onclick="openMemoryModal()" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-300/80 rounded-lg shadow-sm transition-all flex items-center space-x-1.5">
+          <svg class="w-3.5 h-3.5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
           <span>Memory Vault</span>
-          <span id="mem-count-badge" class="px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-600 rounded font-mono font-medium">7</span>
+          <span id="mem-count-badge" class="px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-600 rounded font-mono font-semibold">7</span>
         </button>
 
-        <!-- Excel Export -->
-        <a href="/api/export-excel" class="px-3.5 py-1.5 text-xs font-medium text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg shadow-sm transition-all flex items-center space-x-1.5">
-          <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        <!-- 4. Excel Export -->
+        <a href="/api/export-excel" class="px-3 py-1.5 text-xs font-medium text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80 rounded-lg shadow-sm transition-all flex items-center space-x-1.5">
+          <svg class="w-3.5 h-3.5 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
           <span>Export .xlsx</span>
         </a>
 
-        <!-- Candidate Profile & Resume Button -->
-        <button onclick="openProfileModal()" class="h-8 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 flex items-center space-x-2 text-xs font-semibold transition-all" title="Candidate Profile & Resume Settings">
+        <!-- 5. Profile & Resume Settings -->
+        <button onclick="openProfileModal()" class="h-8 pl-2 pr-3 rounded-lg bg-slate-100 hover:bg-slate-200/80 border border-slate-200 text-slate-800 flex items-center space-x-2 text-xs font-semibold transition-all" title="Manage Candidate Profile & Resume">
           <span id="badge-dot" class="w-2 h-2 rounded-full {% if candidate.resume_uploaded %}bg-emerald-500{% else %}bg-amber-500 animate-pulse{% endif %}"></span>
           <span id="badge-name" class="truncate max-w-[120px]">{{ candidate.name }}</span>
-          <span class="text-[10px] text-slate-400">⚙️</span>
+          <svg class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
       </div>
 
@@ -175,64 +192,80 @@
   </header>
 
   <!-- ========================================================================= -->
-  <!-- 2. EXECUTIVE METRICS BAR                                                   -->
+  <!-- 2. INTEGRATED BENTO KPI RIBBON                                            -->
   <!-- ========================================================================= -->
-  <section class="max-w-[1680px] mx-auto w-full px-6 pt-5 pb-3">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+  <section class="max-w-[1720px] mx-auto w-full px-6 pt-5 pb-3">
+    <div class="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-slate-200/80 bg-white border border-slate-200/80 rounded-2xl shadow-[0_1px_3px_0_rgba(15,23,42,0.03)] overflow-hidden">
       
-      <!-- Card 1: Total -->
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <!-- Metric 1: Total Ingested -->
+      <div class="p-4 sm:p-5 flex items-center justify-between">
         <div>
-          <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Total Ingested</p>
-          <div class="mt-1 flex items-baseline space-x-2">
-            <h3 id="stat-total" class="text-2xl font-bold text-slate-900 font-display">0</h3>
-            <span class="text-xs text-slate-500">roles</span>
+          <div class="flex items-center space-x-1.5 text-slate-500">
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+            <span class="text-[10px] font-mono font-semibold uppercase tracking-wider">Total Pipeline Ingested</span>
           </div>
+          <div class="mt-1 flex items-baseline space-x-2">
+            <span id="stat-total" class="text-3xl font-extrabold text-slate-950 font-display tracking-tight tabular-nums">0</span>
+            <span class="text-[11px] text-slate-400 font-medium">positions</span>
+          </div>
+          <span class="text-[10px] text-slate-500 font-medium">Pan-India & Tech Hubs</span>
         </div>
-        <div class="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 text-sm">
-          📊
+        <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-600">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
         </div>
       </div>
 
-      <!-- Card 2: Review Needed -->
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <!-- Metric 2: Review Queue -->
+      <div class="p-4 sm:p-5 flex items-center justify-between bg-amber-50/20">
         <div>
-          <p class="text-[11px] font-semibold uppercase tracking-wider text-amber-700">Review Required</p>
-          <div class="mt-1 flex items-baseline space-x-2">
-            <h3 id="stat-review" class="text-2xl font-bold text-amber-900 font-display">0</h3>
-            <span class="text-xs text-amber-700">awaiting approval</span>
+          <div class="flex items-center space-x-1.5 text-amber-700">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+            <span class="text-[10px] font-mono font-semibold uppercase tracking-wider">Decision Queue</span>
           </div>
+          <div class="mt-1 flex items-baseline space-x-2">
+            <span id="stat-review" class="text-3xl font-extrabold text-amber-950 font-display tracking-tight tabular-nums">0</span>
+            <span class="text-[11px] text-amber-700 font-medium">awaiting review</span>
+          </div>
+          <span class="text-[10px] text-amber-600/80 font-medium">High ATS Match (80%+)</span>
         </div>
-        <div class="w-9 h-9 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 font-bold text-sm">
-          ⚡
+        <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-700">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
       </div>
 
-      <!-- Card 3: Applied -->
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <!-- Metric 3: Applied -->
+      <div class="p-4 sm:p-5 flex items-center justify-between bg-emerald-50/20">
         <div>
-          <p class="text-[11px] font-semibold uppercase tracking-wider text-emerald-700">Submitted (Applied)</p>
-          <div class="mt-1 flex items-baseline space-x-2">
-            <h3 id="stat-applied" class="text-2xl font-bold text-emerald-900 font-display">0</h3>
-            <span class="text-xs text-emerald-700">logged to Excel</span>
+          <div class="flex items-center space-x-1.5 text-emerald-700">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <span class="text-[10px] font-mono font-semibold uppercase tracking-wider">Applied & Logged</span>
           </div>
+          <div class="mt-1 flex items-baseline space-x-2">
+            <span id="stat-applied" class="text-3xl font-extrabold text-emerald-950 font-display tracking-tight tabular-nums">0</span>
+            <span class="text-[11px] text-emerald-700 font-medium">in Excel tracker</span>
+          </div>
+          <span class="text-[10px] text-emerald-600/80 font-medium">Audit Trail Preserved</span>
         </div>
-        <div class="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 font-bold text-sm">
-          ✓
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-center text-emerald-700">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
       </div>
 
-      <!-- Card 4: Interviews -->
-      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <!-- Metric 4: Active Loop Signals -->
+      <div class="p-4 sm:p-5 flex items-center justify-between bg-blue-50/20">
         <div>
-          <p class="text-[11px] font-semibold uppercase tracking-wider text-blue-700">Interviews & Assessments</p>
-          <div class="mt-1 flex items-baseline space-x-2">
-            <h3 id="stat-interviews" class="text-2xl font-bold text-blue-900 font-display">0</h3>
-            <span class="text-xs text-blue-700">active pipeline</span>
+          <div class="flex items-center space-x-1.5 text-blue-700">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+            <span class="text-[10px] font-mono font-semibold uppercase tracking-wider">Interviews & Tests</span>
           </div>
+          <div class="mt-1 flex items-baseline space-x-2">
+            <span id="stat-interviews" class="text-3xl font-extrabold text-blue-950 font-display tracking-tight tabular-nums">0</span>
+            <span class="text-[11px] text-blue-700 font-medium">active signals</span>
+          </div>
+          <span class="text-[10px] text-blue-600/80 font-medium">Recruiter Loop Synced</span>
         </div>
-        <div class="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-700 font-bold text-sm">
-          🎯
+        <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200/80 flex items-center justify-center text-blue-700">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         </div>
       </div>
 
@@ -240,59 +273,63 @@
   </section>
 
   <!-- ========================================================================= -->
-  <!-- 3. DATA WORKSPACE                                                         -->
+  <!-- 3. UNIFIED DATA WORKSPACE                                                 -->
   <!-- ========================================================================= -->
-  <main class="max-w-[1680px] mx-auto w-full px-6 flex-1 flex flex-col overflow-hidden pb-6">
+  <main class="max-w-[1720px] mx-auto w-full px-6 flex-1 flex flex-col overflow-hidden pb-6">
     
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex-1 flex flex-col overflow-hidden">
+    <div class="glass-surface rounded-2xl p-4 flex-1 flex flex-col overflow-hidden">
       
       <!-- Filter Toolbar -->
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 border-b border-slate-200 shrink-0">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 border-b border-slate-200/80 shrink-0">
         
-        <!-- Status Tabs -->
+        <!-- Status Pills -->
         <div class="flex items-center space-x-1.5 overflow-x-auto w-full sm:w-auto text-xs pb-1 sm:pb-0">
-          <button onclick="filterStatus('all')" id="tab-all" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-white shadow-sm transition-all flex items-center space-x-1.5">
-            <span>All</span>
+          <button onclick="filterStatus('all')" id="tab-all" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-950 text-white shadow-sm transition-all flex items-center space-x-1.5">
+            <span>All Positions</span>
             <span id="count-all" class="px-1.5 py-0.2 rounded bg-white/20 text-[10px] font-mono">0</span>
           </button>
           <button onclick="filterStatus('review')" id="tab-review" class="px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition-all flex items-center space-x-1.5">
-            <span>Review Needed</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+            <span>Review Queue</span>
             <span id="count-review" class="px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[10px] font-mono font-semibold">0</span>
           </button>
           <button onclick="filterStatus('applied')" id="tab-applied" class="px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition-all flex items-center space-x-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
             <span>Applied</span>
             <span id="count-applied" class="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 text-[10px] font-mono font-semibold">0</span>
           </button>
           <button onclick="filterStatus('interview')" id="tab-interview" class="px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition-all flex items-center space-x-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
             <span>Interviews</span>
             <span id="count-interview" class="px-1.5 py-0.2 rounded bg-blue-100 text-blue-800 text-[10px] font-mono font-semibold">0</span>
           </button>
           <button onclick="filterStatus('needs_input')" id="tab-needs_input" class="px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition-all flex items-center space-x-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
             <span>Needs Input</span>
             <span id="count-needs_input" class="px-1.5 py-0.2 rounded bg-rose-100 text-rose-800 text-[10px] font-mono font-semibold">0</span>
           </button>
         </div>
 
-        <!-- Search & Location Dropdown -->
+        <!-- Search & Hub Dropdown -->
         <div class="flex items-center space-x-2.5 w-full sm:w-auto">
           
           <div class="relative w-full sm:w-64">
-            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input 
               type="text" 
               id="search-input" 
               oninput="handleSearchInput(event)"
               placeholder="Search company, title, skills..." 
-              class="w-full text-xs pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-800 transition-all placeholder:text-slate-400"
+              class="w-full text-xs pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-300/80 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white text-slate-800 transition-all placeholder:text-slate-400"
             />
           </div>
 
-          <select id="location-select" onchange="filterLocation(this.value)" class="text-xs bg-slate-50 border border-slate-300 text-slate-700 px-3 py-1.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium cursor-pointer">
-            <option value="all">All Locations</option>
-            <option value="hyderabad">Hyderabad</option>
-            <option value="bengaluru">Bengaluru</option>
-            <option value="chennai">Chennai</option>
-            <option value="pune">Pune</option>
+          <select id="location-select" onchange="filterLocation(this.value)" class="text-xs bg-slate-50 border border-slate-300/80 text-slate-700 px-3 py-1.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-medium cursor-pointer">
+            <option value="all">Pan-India & Global</option>
+            <option value="hyderabad">Hyderabad Hub</option>
+            <option value="bengaluru">Bengaluru Hub</option>
+            <option value="chennai">Chennai Hub</option>
+            <option value="pune">Pune Hub</option>
             <option value="remote">Remote Only</option>
           </select>
         </div>
@@ -303,20 +340,20 @@
       <!-- =================================================================== -->
       <div id="view-table" class="flex-1 flex flex-col overflow-hidden pt-2">
         
-        <div class="flex-1 overflow-y-auto rounded-lg border border-slate-200">
+        <div class="flex-1 overflow-y-auto rounded-xl border border-slate-200/80">
           <table class="w-full text-left text-xs border-collapse">
-            <thead class="bg-slate-50 sticky top-0 z-10 border-b border-slate-200 text-slate-700 font-semibold uppercase tracking-wider text-[11px]">
+            <thead class="bg-slate-50/90 sticky top-0 z-10 border-b border-slate-200/80 text-slate-500 font-mono text-[10px] uppercase tracking-wider font-semibold">
               <tr>
                 <th class="py-3 px-4">Role & Company</th>
-                <th class="py-3 px-3">Location</th>
+                <th class="py-3 px-3">Location & Mode</th>
                 <th class="py-3 px-3">ATS Match</th>
-                <th class="py-3 px-3">Status</th>
-                <th class="py-3 px-4">Screening & Audit Trail</th>
+                <th class="py-3 px-3">Pipeline Stage</th>
+                <th class="py-3 px-4">Screening & Verification</th>
                 <th class="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody id="table-body" class="divide-y divide-slate-200 text-slate-700">
-              <!-- Dynamically populated via JS -->
+            <tbody id="table-body" class="divide-y divide-slate-100 text-slate-700">
+              <!-- Rendered via renderTable() -->
             </tbody>
           </table>
         </div>
@@ -324,14 +361,14 @@
         <!-- Table Footer / Pagination -->
         <div class="pt-3 px-1 flex items-center justify-between text-xs text-slate-500 shrink-0">
           <div>
-            Showing <span id="pag-start" class="font-semibold text-slate-800 font-mono">0</span> to <span id="pag-end" class="font-semibold text-slate-800 font-mono">0</span> of <span id="pag-total" class="font-semibold text-slate-800 font-mono">0</span> entries
+            Showing <span id="pag-start" class="font-semibold text-slate-900 font-mono">0</span> to <span id="pag-end" class="font-semibold text-slate-900 font-mono">0</span> of <span id="pag-total" class="font-semibold text-slate-900 font-mono">0</span> positions
           </div>
           <div class="flex items-center space-x-2">
-            <button onclick="changePage(-1)" id="btn-prev-page" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 disabled:opacity-40 font-medium transition-all shadow-sm">
+            <button onclick="changePage(-1)" id="btn-prev-page" class="px-3 py-1.5 bg-white border border-slate-300/80 rounded-lg text-slate-700 hover:bg-slate-50 disabled:opacity-40 font-medium transition-all shadow-sm">
               Previous
             </button>
-            <span class="px-2 font-medium text-slate-700">Page <span id="pag-current" class="font-bold text-slate-900">1</span> of <span id="pag-max">1</span></span>
-            <button onclick="changePage(1)" id="btn-next-page" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 disabled:opacity-40 font-medium transition-all shadow-sm">
+            <span class="px-2 font-medium text-slate-700 font-mono text-[11px]">Page <span id="pag-current" class="font-bold text-slate-900">1</span> of <span id="pag-max">1</span></span>
+            <button onclick="changePage(1)" id="btn-next-page" class="px-3 py-1.5 bg-white border border-slate-300/80 rounded-lg text-slate-700 hover:bg-slate-50 disabled:opacity-40 font-medium transition-all shadow-sm">
               Next
             </button>
           </div>
@@ -340,62 +377,82 @@
       </div>
 
       <!-- =================================================================== -->
-      <!-- VIEW 2: KANBAN BOARD                                                -->
+      <!-- VIEW 2: PIPELINE KANBAN BOARD                                       -->
       <!-- =================================================================== -->
       <div id="view-kanban" class="flex-1 hidden grid grid-cols-6 gap-3 overflow-x-auto pt-3">
-        <!-- Discovered -->
-        <div class="bg-slate-50 rounded-lg p-3 border border-slate-200 flex flex-col h-full overflow-hidden">
-          <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 font-semibold text-xs text-slate-700">
-            <span>Discovered</span>
+        
+        <!-- Column 1: Discovered -->
+        <div class="bg-slate-50/70 rounded-xl p-3 border border-slate-200/80 flex flex-col h-full overflow-hidden">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200/80 font-semibold text-xs text-slate-700">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+              <span>Discovered</span>
+            </div>
             <span id="kbadge-discovered" class="px-1.5 py-0.2 bg-white rounded border text-[10px] font-mono">0</span>
           </div>
           <div id="kcol-discovered" class="flex-1 space-y-2 overflow-y-auto pr-1"></div>
         </div>
 
-        <!-- Needs Input -->
-        <div class="bg-rose-50/50 rounded-lg p-3 border border-rose-200 flex flex-col h-full overflow-hidden">
-          <div class="flex items-center justify-between pb-2 mb-2 border-b border-rose-200 font-semibold text-xs text-rose-800">
-            <span>Needs Input</span>
+        <!-- Column 2: Needs Input -->
+        <div class="bg-rose-50/30 rounded-xl p-3 border border-rose-200/80 flex flex-col h-full overflow-hidden">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-rose-200/80 font-semibold text-xs text-rose-800">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+              <span>Needs Input</span>
+            </div>
             <span id="kbadge-needs_input" class="px-1.5 py-0.2 bg-white rounded border text-[10px] font-mono text-rose-800">0</span>
           </div>
           <div id="kcol-needs_input" class="flex-1 space-y-2 overflow-y-auto pr-1"></div>
         </div>
 
-        <!-- Review Mode -->
-        <div class="bg-amber-50/50 rounded-lg p-3 border border-amber-200 flex flex-col h-full overflow-hidden">
-          <div class="flex items-center justify-between pb-2 mb-2 border-b border-amber-200 font-semibold text-xs text-amber-800">
-            <span>Review Mode</span>
+        <!-- Column 3: Review Queue -->
+        <div class="bg-amber-50/30 rounded-xl p-3 border border-amber-200/80 flex flex-col h-full overflow-hidden">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-amber-200/80 font-semibold text-xs text-amber-800">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              <span>Review Queue</span>
+            </div>
             <span id="kbadge-review" class="px-1.5 py-0.2 bg-white rounded border text-[10px] font-mono text-amber-800">0</span>
           </div>
           <div id="kcol-review" class="flex-1 space-y-2 overflow-y-auto pr-1"></div>
         </div>
 
-        <!-- Applied -->
-        <div class="bg-emerald-50/50 rounded-lg p-3 border border-emerald-200 flex flex-col h-full overflow-hidden">
-          <div class="flex items-center justify-between pb-2 mb-2 border-b border-emerald-200 font-semibold text-xs text-emerald-800">
-            <span>Applied</span>
+        <!-- Column 4: Applied -->
+        <div class="bg-emerald-50/30 rounded-xl p-3 border border-emerald-200/80 flex flex-col h-full overflow-hidden">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-emerald-200/80 font-semibold text-xs text-emerald-800">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>Applied</span>
+            </div>
             <span id="kbadge-applied" class="px-1.5 py-0.2 bg-white rounded border text-[10px] font-mono text-emerald-800">0</span>
           </div>
           <div id="kcol-applied" class="flex-1 space-y-2 overflow-y-auto pr-1"></div>
         </div>
 
-        <!-- Interviews -->
-        <div class="bg-blue-50/50 rounded-lg p-3 border border-blue-200 flex flex-col h-full overflow-hidden">
-          <div class="flex items-center justify-between pb-2 mb-2 border-b border-blue-200 font-semibold text-xs text-blue-800">
-            <span>Interviews</span>
+        <!-- Column 5: Interviews -->
+        <div class="bg-blue-50/30 rounded-xl p-3 border border-blue-200/80 flex flex-col h-full overflow-hidden">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-blue-200/80 font-semibold text-xs text-blue-800">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+              <span>Interviews</span>
+            </div>
             <span id="kbadge-interview" class="px-1.5 py-0.2 bg-white rounded border text-[10px] font-mono text-blue-800">0</span>
           </div>
           <div id="kcol-interview" class="flex-1 space-y-2 overflow-y-auto pr-1"></div>
         </div>
 
-        <!-- Archived -->
-        <div class="bg-slate-100/60 rounded-lg p-3 border border-slate-200 flex flex-col h-full overflow-hidden">
-          <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 font-semibold text-xs text-slate-600">
-            <span>Archived</span>
+        <!-- Column 6: Archived -->
+        <div class="bg-slate-100/40 rounded-xl p-3 border border-slate-200/80 flex flex-col h-full overflow-hidden">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200/80 font-semibold text-xs text-slate-600">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+              <span>Archived</span>
+            </div>
             <span id="kbadge-rejected" class="px-1.5 py-0.2 bg-white rounded border text-[10px] font-mono text-slate-600">0</span>
           </div>
           <div id="kcol-rejected" class="flex-1 space-y-2 overflow-y-auto pr-1"></div>
         </div>
+
       </div>
 
     </div>
@@ -404,105 +461,108 @@
   <!-- ========================================================================= -->
   <!-- 4. SLIDE-OVER COCKPIT INSPECTOR DRAWER                                     -->
   <!-- ========================================================================= -->
-  <div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 z-40 bg-slate-900/30 backdrop-blur-sm hidden transition-opacity"></div>
-  <aside id="cockpit-drawer" class="fixed top-0 right-0 z-50 h-full w-[480px] bg-white border-l border-slate-200 shadow-2xl transform translate-x-full transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col">
+  <div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-sm hidden transition-opacity"></div>
+  <aside id="cockpit-drawer" class="fixed top-0 right-0 z-50 h-full w-[520px] bg-white border-l border-slate-200 shadow-2xl transform translate-x-full transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col">
     
     <!-- Drawer Header -->
-    <div class="h-16 px-6 border-b border-slate-200 flex items-center justify-between shrink-0 bg-slate-50">
-      <div>
-        <span id="drawer-match-badge" class="px-2.5 py-0.5 text-[11px] font-bold rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono">92% Match</span>
-        <h3 id="drawer-company" class="text-xs font-semibold uppercase tracking-wider text-slate-500 mt-1">Company</h3>
+    <div class="p-6 border-b border-slate-200/80 flex items-start justify-between shrink-0 bg-slate-50/70">
+      <div class="space-y-1">
+        <div class="flex items-center space-x-2">
+          <span id="drawer-company" class="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">Company</span>
+          <span id="drawer-match-badge" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono">92% ATS</span>
+        </div>
+        <h2 id="drawer-title" class="text-base font-extrabold text-slate-950 tracking-tight leading-snug">Job Title</h2>
+        <div class="flex items-center space-x-2 text-[11px] text-slate-500 font-medium pt-1">
+          <span id="drawer-location">Hyderabad</span>
+          <span>•</span>
+          <span id="drawer-worktype">Hybrid</span>
+          <span>•</span>
+          <a id="drawer-link" href="#" target="_blank" class="text-blue-600 hover:text-blue-800 font-semibold inline-flex items-center space-x-1">
+            <span>Direct Posting</span>
+            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
       </div>
-      <button onclick="closeDrawer()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors">
-        ✕
+      <button onclick="closeDrawer()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
 
     <!-- Drawer Body -->
     <div class="flex-1 overflow-y-auto p-6 space-y-5 text-xs">
-      <div>
-        <h2 id="drawer-title" class="text-base font-bold text-slate-900 leading-snug">Job Title</h2>
-        <div class="flex items-center space-x-2 text-slate-500 mt-1 font-medium">
-          <span id="drawer-location">📍 Hyderabad</span>
-          <span>•</span>
-          <span id="drawer-worktype">💼 Hybrid</span>
-          <span>•</span>
-          <a id="drawer-link" href="#" target="_blank" class="text-blue-600 hover:underline font-semibold inline-flex items-center space-x-0.5">
-            <span>Direct Job Posting</span>
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-          </a>
+      
+      <!-- Autonomous Form-Filler Pilot Console -->
+      <div class="p-4 bg-emerald-50/50 rounded-xl border border-emerald-200/80 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <h5 class="font-bold text-emerald-950 text-xs">Playwright Autonomous Pilot</h5>
+          </div>
+          <span class="text-[10px] font-mono font-bold bg-white text-emerald-800 px-2 py-0.5 rounded border border-emerald-200">HITL Gate Active</span>
         </div>
+        <p class="text-[11px] text-emerald-900 leading-relaxed font-normal">
+          Opens Chromium headed session, fills applicant details from verified resume, matches screening answers, highlights fields in green, and halts before Submit for your manual sign-off.
+        </p>
+        <button onclick="executeBrowserAutoFill()" id="btn-browser-autofill" class="w-full py-2.5 px-4 bg-slate-950 hover:bg-slate-800 text-white rounded-lg font-bold text-xs shadow-sm transition-all flex items-center justify-center space-x-2 border border-slate-800">
+          <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Launch Auto-Fill Pilot</span>
+        </button>
+        <div id="autofill-feedback" class="hidden text-xs p-3 bg-white rounded-lg border border-emerald-200 text-slate-800 space-y-1.5 shadow-sm"></div>
       </div>
 
-      <!-- Screening Notes -->
-      <div class="p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-2">
-        <h4 class="font-semibold text-slate-800 uppercase tracking-wider text-[11px] flex items-center justify-between">
-          <span>Application Form Summary</span>
-          <span class="text-emerald-700 font-semibold text-[10px]">Verified Safe</span>
+      <!-- Application Screening Verification -->
+      <div class="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
+        <h4 class="font-semibold text-slate-900 uppercase tracking-wider text-[10px] font-mono flex items-center justify-between">
+          <span>Verification & Fit Analysis</span>
+          <span class="text-emerald-700 font-semibold text-[10px]">Deterministic Safe</span>
         </h4>
         <p id="drawer-screening-notes" class="text-slate-700 leading-relaxed font-sans"></p>
       </div>
 
-      <!-- Matched Skills -->
+      <!-- Matched Competencies -->
       <div>
-        <h4 class="font-semibold text-slate-700 uppercase tracking-wider text-[11px] mb-2">Matched Competencies:</h4>
+        <h4 class="font-semibold text-slate-800 uppercase tracking-wider text-[10px] font-mono mb-2">Verified Skill Matches:</h4>
         <div id="drawer-skills" class="flex flex-wrap gap-1.5"></div>
       </div>
 
-      <!-- Recruiter Outreach -->
-      <div class="p-4 bg-blue-50 rounded-lg border border-blue-100 flex items-center justify-between">
+      <!-- Recruiter Outreach Box -->
+      <div class="p-4 bg-blue-50/50 rounded-xl border border-blue-200/70 flex items-center justify-between">
         <div>
-          <h5 class="font-semibold text-blue-900">Recruiter Outreach</h5>
-          <p class="text-blue-700 text-[11px]">Generate tailored email / LinkedIn DM</p>
+          <h5 class="font-bold text-blue-950">Tailored Recruiter Outreach</h5>
+          <p class="text-blue-700 text-[11px]">Generate personalized LinkedIn DM or email</p>
         </div>
-        <button onclick="openOutreachFromDrawer()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-semibold text-xs transition-colors shadow-sm">
-          Generate DM
+        <button onclick="openOutreachFromDrawer()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-xs transition-colors shadow-sm">
+          Draft Message
         </button>
       </div>
 
-      <!-- Autonomous Browser Pilot (Playwright) with Human-in-the-Loop Safety -->
-      <div class="p-4 bg-emerald-50/70 rounded-lg border border-emerald-200/80 space-y-3">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <h5 class="font-bold text-emerald-950 text-xs">Autonomous Browser Auto-Fill</h5>
-          </div>
-          <span class="text-[10px] font-mono font-bold bg-white text-emerald-800 px-2 py-0.5 rounded border border-emerald-300">HITL Safety Stop</span>
-        </div>
-        <p class="text-[11px] text-emerald-900 leading-relaxed font-normal">
-          Launches visible Chromium, populates candidate details, highlights filled inputs in green, and halts before the Submit button for your safety review.
-        </p>
-        <button onclick="executeBrowserAutoFill()" id="btn-browser-autofill" class="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md font-bold text-xs shadow-sm transition-all flex items-center justify-center space-x-1.5">
-          <span>⚡</span>
-          <span>Launch Browser Auto-Fill Pilot</span>
-        </button>
-        <div id="autofill-feedback" class="hidden text-xs p-3 bg-white rounded-md border border-emerald-200 text-slate-800 space-y-1.5"></div>
-      </div>
     </div>
 
     <!-- Drawer Footer Actions -->
-    <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
-      <button onclick="closeDrawer()" class="px-4 py-2 text-slate-600 hover:bg-slate-200 rounded-md font-medium">Cancel</button>
-      <button onclick="executeDrawerApproval()" id="btn-drawer-approve" class="px-5 py-2 font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-md shadow-sm transition-all flex items-center space-x-1.5">
-        <span>👉</span>
+    <div class="p-4 border-t border-slate-200 bg-slate-50/80 flex items-center justify-between shrink-0">
+      <button onclick="closeDrawer()" class="px-4 py-2 text-slate-600 hover:bg-slate-200/60 rounded-lg font-medium">Cancel</button>
+      <button onclick="executeDrawerApproval()" id="btn-drawer-approve" class="px-5 py-2 font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-sm transition-all flex items-center space-x-1.5">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         <span>Approve & Mark Applied</span>
       </button>
     </div>
   </aside>
 
   <!-- ========================================================================= -->
-  <!-- 5. MEMORY VAULT & OUTREACH MODALS                                         -->
+  <!-- 5. MEMORY VAULT, OUTREACH, & PROFILE MODALS                               -->
   <!-- ========================================================================= -->
   
   <!-- MEMORY VAULT MODAL -->
-  <div id="memory-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[85vh] flex flex-col">
+  <div id="memory-modal" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[85vh] flex flex-col">
       <div class="flex items-center justify-between border-b pb-3">
         <div>
-          <h3 class="text-base font-bold text-slate-900">🧠 Permanent Q&A Memory Vault</h3>
-          <p class="text-xs text-slate-500">Learned answers to recurring screening questions (stored locally).</p>
+          <h3 class="text-base font-extrabold text-slate-950 tracking-tight">Screening Q&A Memory Vault</h3>
+          <p class="text-xs text-slate-500">Learned answers to recurring screening questions (stored locally on disk).</p>
         </div>
-        <button onclick="closeMemoryModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 font-bold">✕</button>
+        <button onclick="closeMemoryModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 font-bold">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
       <div id="memory-list" class="space-y-2 overflow-y-auto flex-1 pr-1 text-xs"></div>
@@ -511,57 +571,62 @@
       <form onsubmit="handleSaveMemory(event)" class="border-t pt-3.5 flex gap-2">
         <input type="text" id="new-mem-key" placeholder="Question (e.g. Notice period)" required class="flex-1 text-xs px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500" />
         <input type="text" id="new-mem-val" placeholder="Your permanent answer" required class="flex-1 text-xs px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:ring-2 focus:ring-blue-500" />
-        <button type="submit" class="px-4 py-2 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white rounded-lg shadow-sm">Save</button>
+        <button type="submit" class="px-4 py-2 text-xs font-semibold bg-slate-950 hover:bg-slate-800 text-white rounded-lg shadow-sm">Save</button>
       </form>
     </div>
   </div>
 
   <!-- OUTREACH MODAL -->
-  <div id="outreach-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+  <div id="outreach-modal" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <div>
-          <h3 class="text-base font-bold text-slate-900">✉️ Tailored Recruiter Outreach</h3>
+          <h3 class="text-base font-extrabold text-slate-950 tracking-tight">Tailored Recruiter Outreach</h3>
           <p class="text-xs text-slate-500">Personalized cold message highlighting your project experience.</p>
         </div>
-        <button onclick="closeOutreachModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 font-bold">✕</button>
+        <button onclick="closeOutreachModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 font-bold">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
-      <textarea id="outreach-text" rows="8" readonly class="w-full text-xs p-3.5 bg-slate-50 border border-slate-200 rounded-lg font-mono focus:outline-none text-slate-800 leading-relaxed"></textarea>
+      <textarea id="outreach-text" rows="9" readonly class="w-full text-xs p-3.5 bg-slate-50 border border-slate-200 rounded-xl font-mono focus:outline-none text-slate-800 leading-relaxed"></textarea>
 
       <div class="flex justify-end space-x-2">
         <button onclick="closeOutreachModal()" class="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Close</button>
-        <button onclick="copyOutreach()" id="btn-copy-outreach" class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
-          📋 Copy to Clipboard
+        <button onclick="copyOutreach()" id="btn-copy-outreach" class="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm flex items-center space-x-1.5">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span>Copy to Clipboard</span>
         </button>
       </div>
     </div>
   </div>
 
   <!-- CANDIDATE PROFILE & RESUME UPLOAD MODAL -->
-  <div id="profile-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] flex flex-col">
+  <div id="profile-modal" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] flex flex-col">
       <div class="flex items-center justify-between border-b pb-3">
         <div>
-          <h3 class="text-base font-bold text-slate-900 flex items-center space-x-2">
-            <span>👤 Candidate Profile & Resume Engine</span>
-          </h3>
+          <h3 class="text-base font-extrabold text-slate-950 tracking-tight">Candidate Profile & Resume Engine</h3>
           <p class="text-xs text-slate-500">Upload your resume to auto-parse skills, role matches, and browser credentials.</p>
         </div>
-        <button onclick="closeProfileModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 font-bold">✕</button>
+        <button onclick="closeProfileModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 font-bold">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
       <div class="overflow-y-auto flex-1 space-y-4 pr-1 text-xs">
         
         <!-- 1. Resume Drag & Drop Upload Zone -->
-        <div class="p-4 bg-slate-50 border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl transition-all text-center space-y-2">
+        <div class="p-4 bg-slate-50/80 border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl transition-all text-center space-y-2">
           <input type="file" id="resume-file-input" accept=".pdf,.txt,.md" class="hidden" onchange="handleResumeUpload(event)" />
-          <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-600 mx-auto flex items-center justify-center text-base">📄</div>
+          <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-600 mx-auto flex items-center justify-center">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
           <div>
-            <span class="font-bold text-slate-800 text-xs">Upload your Resume (PDF / TXT / MD)</span>
+            <span class="font-bold text-slate-900 text-xs">Upload your Resume (PDF / TXT / MD)</span>
             <p class="text-slate-500 text-[11px] mt-0.5" id="resume-status-text">Click or drag & drop to auto-parse skills and contacts.</p>
           </div>
-          <button type="button" onclick="document.getElementById('resume-file-input').click()" id="btn-upload-resume" class="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-semibold text-xs transition-colors shadow-sm">
+          <button type="button" onclick="document.getElementById('resume-file-input').click()" id="btn-upload-resume" class="px-4 py-1.5 bg-slate-950 hover:bg-slate-800 text-white rounded-lg font-semibold text-xs transition-colors shadow-sm">
             Choose Resume File
           </button>
           <div id="upload-status" class="hidden text-[11px] font-medium p-2 rounded"></div>
@@ -618,7 +683,7 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- 6. APPLICATION CONTROLLER                                                 -->
+  <!-- 6. HIGH-PRECISION APPLICATION CONTROLLER                                  -->
   <!-- ========================================================================= -->
   <script>
     let currentStatusFilter = 'all';
@@ -683,19 +748,18 @@
           tr.onclick = () => openDrawer(job);
 
           const statusBadge = getStatusBadge(job.status);
-          const matchBadge = job.match_score >= 85 
-            ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">${job.match_score}%</span>`
-            : `<span class="px-2 py-0.5 rounded-full text-[11px] font-mono font-bold bg-blue-50 text-blue-700 border border-blue-200">${job.match_score}%</span>`;
+          const matchColor = job.match_score >= 85 ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-blue-700 bg-blue-50 border-blue-200';
+          const matchBarColor = job.match_score >= 85 ? 'bg-emerald-500' : 'bg-blue-500';
 
           tr.innerHTML = `
             <td class="py-3 px-4">
               <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-slate-700 text-xs shrink-0 font-mono">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-b from-white to-slate-100 border border-slate-200/80 flex items-center justify-center font-bold text-slate-800 text-[11px] shrink-0 font-mono shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
                   ${escapeHtml(job.company).substring(0, 2).toUpperCase()}
                 </div>
                 <div>
-                  <div class="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors text-xs">${escapeHtml(job.title)}</div>
-                  <div class="text-[11px] text-slate-500 font-medium">${escapeHtml(job.company)} • ${job.date}</div>
+                  <div class="font-semibold text-slate-950 group-hover:text-blue-600 transition-colors text-xs leading-snug">${escapeHtml(job.title)}</div>
+                  <div class="text-[11px] text-slate-500 font-medium">${escapeHtml(job.company)} <span class="text-slate-300">•</span> ${job.date}</div>
                 </div>
               </div>
             </td>
@@ -704,22 +768,30 @@
                 ${escapeHtml(job.location)} <span class="mx-1 text-slate-300">•</span> ${escapeHtml(job.work_type)}
               </span>
             </td>
-            <td class="py-3 px-3">${matchBadge}</td>
+            <td class="py-3 px-3">
+              <div class="flex items-center space-x-2">
+                <div class="w-12 bg-slate-100 rounded-full h-1.5 overflow-hidden border border-slate-200/60">
+                  <div class="h-full ${matchBarColor}" style="width: ${job.match_score}%"></div>
+                </div>
+                <span class="font-mono text-xs font-semibold ${matchColor} px-1.5 py-0.5 rounded border text-[10px]">${job.match_score}%</span>
+              </div>
+            </td>
             <td class="py-3 px-3">${statusBadge}</td>
-            <td class="py-3 px-4 max-w-xs truncate text-[11px] text-slate-600">
-              ${escapeHtml(job.screening_notes || 'All requirements match profile.')}
+            <td class="py-3 px-4 max-w-xs truncate text-[11px] text-slate-600 font-normal">
+              ${escapeHtml(job.screening_notes || 'All requirements match candidate profile.')}
             </td>
             <td class="py-3 px-4 text-right space-x-1" onclick="event.stopPropagation()">
-              <button onclick="openDrawerWithJobId('${job.id}')" class="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors">
+              <button onclick="openDrawerWithJobId('${job.id}')" title="Inspect Cockpit" class="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors">
                 Inspect
               </button>
               ${job.status !== 'applied' ? `
-                <button onclick="approveDirect('${job.id}')" class="px-2.5 py-1 text-[11px] font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-md transition-colors">
-                  Apply
+                <button onclick="approveDirect('${job.id}')" title="Approve & Log Application" class="px-2.5 py-1 text-[11px] font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80 rounded-md transition-colors inline-flex items-center gap-1">
+                  <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Approve</span>
                 </button>
               ` : `
-                <button onclick="moveToInterview('${job.id}')" class="px-2.5 py-1 text-[11px] font-semibold text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-md transition-colors">
-                  Interview
+                <button onclick="moveToInterview('${job.id}')" title="Flag Interview Scheduled" class="px-2.5 py-1 text-[11px] font-semibold text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 rounded-md transition-colors inline-flex items-center gap-1">
+                  <span>Interview</span>
                 </button>
               `}
             </td>
@@ -749,18 +821,20 @@
         colEl.innerHTML = '';
         jobs.forEach(job => {
           const card = document.createElement('div');
-          card.className = "bg-white p-3 rounded-lg border border-slate-200 shadow-sm hover:border-slate-300 hover:shadow transition-all space-y-1.5 cursor-pointer text-xs group";
+          card.className = "bg-white p-3 rounded-xl border border-slate-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:shadow-md hover:border-slate-300 transition-all cursor-pointer group space-y-2";
           card.onclick = () => openDrawer(job);
 
           card.innerHTML = `
-            <div class="flex items-start justify-between gap-1">
-              <div>
-                <span class="text-[9px] font-mono font-semibold uppercase tracking-wider text-slate-500">${escapeHtml(job.company)}</span>
-                <h4 class="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1">${escapeHtml(job.title)}</h4>
-              </div>
-              <span class="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded bg-blue-50 text-blue-700">${job.match_score}%</span>
+            <div class="flex items-start justify-between gap-2">
+              <span class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-xs leading-snug">${escapeHtml(job.title)}</span>
+              <span class="font-mono text-[10px] font-semibold text-slate-500 shrink-0">${job.match_score}%</span>
             </div>
-            <div class="text-[10px] text-slate-500 font-medium">📍 ${escapeHtml(job.location)}</div>
+            <div class="text-[11px] text-slate-500">${escapeHtml(job.company)} • ${escapeHtml(job.location)}</div>
+            <div class="flex flex-wrap gap-1 pt-1">
+              ${(job.matched_skills || []).slice(0, 3).map(s => `
+                <span class="px-1.5 py-0.2 rounded text-[10px] bg-slate-100 text-slate-600 border border-slate-200/60">${escapeHtml(s)}</span>
+              `).join('')}
+            </div>
           `;
           colEl.appendChild(card);
         });
@@ -768,55 +842,46 @@
     }
 
     function getStatusBadge(status) {
-      switch (status) {
-        case 'applied':
-          return '<span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">Applied</span>';
-        case 'review':
-          return '<span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200">Review Mode</span>';
-        case 'interview':
-          return '<span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 text-blue-800 border border-blue-200">Interview</span>';
-        case 'needs_input':
-          return '<span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-rose-50 text-rose-800 border border-rose-200">Needs Input</span>';
-        default:
-          return '<span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-700 border border-slate-200">Discovered</span>';
-      }
+      const map = {
+        'review': '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200/70"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Review Queue</span>',
+        'applied': '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200/70"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Applied</span>',
+        'interview': '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-800 border border-blue-200/70"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Interview</span>',
+        'needs_input': '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-rose-50 text-rose-800 border border-rose-200/70"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Needs Input</span>',
+        'rejected': '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200/70"><span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>Archived</span>',
+        'discovered': '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-50 text-slate-700 border border-slate-200/70"><span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>Discovered</span>',
+      };
+      return map[status] || map['discovered'];
     }
 
+    // View Switching
     function setViewMode(mode) {
-      const viewTable = document.getElementById('view-table');
-      const viewKanban = document.getElementById('view-kanban');
+      const vTable = document.getElementById('view-table');
+      const vKanban = document.getElementById('view-kanban');
       const btnTable = document.getElementById('btn-view-table');
       const btnKanban = document.getElementById('btn-view-kanban');
 
       if (mode === 'table') {
-        viewTable.classList.remove('hidden');
-        viewKanban.classList.add('hidden');
+        vTable.classList.remove('hidden');
+        vKanban.classList.add('hidden');
         btnTable.className = "px-3 py-1.5 text-xs font-semibold rounded-md bg-white text-slate-900 shadow-sm transition-all flex items-center space-x-1.5";
         btnKanban.className = "px-3 py-1.5 text-xs font-medium rounded-md text-slate-600 hover:text-slate-900 transition-all flex items-center space-x-1.5";
       } else {
-        viewTable.classList.add('hidden');
-        viewKanban.classList.remove('hidden');
+        vTable.classList.add('hidden');
+        vKanban.classList.remove('hidden');
         btnKanban.className = "px-3 py-1.5 text-xs font-semibold rounded-md bg-white text-slate-900 shadow-sm transition-all flex items-center space-x-1.5";
         btnTable.className = "px-3 py-1.5 text-xs font-medium rounded-md text-slate-600 hover:text-slate-900 transition-all flex items-center space-x-1.5";
       }
     }
 
-    function handleSearchInput(e) {
-      clearTimeout(searchDebounceTimer);
-      searchDebounceTimer = setTimeout(() => {
-        currentSearch = e.target.value;
-        currentPage = 1;
-        loadData();
-      }, 300);
-    }
-
+    // Filter Handlers
     function filterStatus(status) {
       currentStatusFilter = status;
       currentPage = 1;
       ['all', 'review', 'applied', 'interview', 'needs_input'].forEach(s => {
         const btn = document.getElementById(`tab-${s}`);
+        if (!btn) return;
         if (s === status) {
-          btn.className = "px-3 py-1.5 rounded-lg font-semibold bg-slate-900 text-white shadow-sm transition-all flex items-center space-x-1.5";
+          btn.className = "px-3 py-1.5 rounded-lg font-semibold bg-slate-950 text-white shadow-sm transition-all flex items-center space-x-1.5";
         } else {
           btn.className = "px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition-all flex items-center space-x-1.5";
         }
@@ -830,6 +895,15 @@
       loadData();
     }
 
+    function handleSearchInput(e) {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        currentSearch = e.target.value.trim();
+        currentPage = 1;
+        loadData();
+      }, 250);
+    }
+
     function changePage(delta) {
       currentPage += delta;
       loadData();
@@ -840,10 +914,10 @@
       activeDrawerJob = job;
       document.getElementById('drawer-title').innerText = job.title;
       document.getElementById('drawer-company').innerText = job.company;
-      document.getElementById('drawer-location').innerText = `📍 ${job.location}`;
-      document.getElementById('drawer-worktype').innerText = `💼 ${job.work_type}`;
-      document.getElementById('drawer-match-badge').innerText = `${job.match_score}% Match`;
-      document.getElementById('drawer-screening-notes').innerText = job.screening_notes || 'All requirements match profile.';
+      document.getElementById('drawer-location').innerText = job.location;
+      document.getElementById('drawer-worktype').innerText = job.work_type;
+      document.getElementById('drawer-match-badge').innerText = `${job.match_score}% ATS Match`;
+      document.getElementById('drawer-screening-notes').innerText = job.screening_notes || 'All requirements match candidate profile.';
 
       const linkEl = document.getElementById('drawer-link');
       linkEl.href = job.job_link;
@@ -865,7 +939,10 @@
       const afBtn = document.getElementById('btn-browser-autofill');
       if (afBtn) {
         afBtn.disabled = false;
-        afBtn.innerHTML = '<span>⚡</span><span>Launch Browser Auto-Fill Pilot</span>';
+        afBtn.innerHTML = `
+          <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Launch Auto-Fill Pilot</span>
+        `;
       }
 
       document.getElementById('drawer-backdrop').classList.remove('hidden');
@@ -875,6 +952,15 @@
     function closeDrawer() {
       document.getElementById('drawer-backdrop').classList.add('hidden');
       document.getElementById('cockpit-drawer').classList.add('translate-x-full');
+    }
+
+    function openDrawerWithJobId(jobId) {
+      fetch(`/api/jobs?search=&page_size=100`)
+        .then(r => r.json())
+        .then(data => {
+          const j = (data.jobs || []).find(item => item.id === jobId);
+          if (j) openDrawer(j);
+        });
     }
 
     async function executeDrawerApproval() {
@@ -923,32 +1009,135 @@
       } catch (err) {
         alert('Network error.');
       } finally {
-        btn.innerText = '+ Ingest';
+        btn.innerHTML = `<span>Ingest</span><span class="text-[10px] opacity-60 font-mono">↵</span>`;
         btn.disabled = false;
       }
     }
 
     async function triggerHarvest() {
       const btn = document.getElementById('btn-harvest');
-      btn.innerText = '⚡ Scraping Multi-Board...';
+      btn.innerText = 'Scraping Multi-Board...';
       btn.disabled = true;
 
       try {
         const res = await fetch('/api/harvest', { method: 'POST' });
         const data = await res.json();
         const s = data.summary || {};
-        alert(`🎉 Harvest Complete!\n• Total Found: ${s.total_scraped || 0}\n• Approved: ${s.accepted || 0}\n• Skipped (per rules): ${s.skipped || 0}\n• Added to Dashboard: ${s.new_added || 0}`);
+        alert(`Harvest Complete!\n• Total Found: ${s.total_scraped || 0}\n• Approved: ${s.accepted || 0}\n• Skipped (per rules): ${s.skipped || 0}\n• Added to Dashboard: ${s.new_added || 0}`);
         loadData();
       } catch (err) {
-        alert('Harvest triggered in background. Refreshing feed...');
-        loadData();
+        alert('Error scraping jobs: ' + err);
       } finally {
-        btn.innerText = '⚡ Hunt Today\'s Jobs';
+        btn.innerHTML = `
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Harvest Pipeline</span>
+        `;
         btn.disabled = false;
       }
     }
 
-    // Outreach
+    // Autonomous Browser Pilot Execution
+    async function executeBrowserAutoFill() {
+      if (!activeDrawerJob) return;
+      const btn = document.getElementById('btn-browser-autofill');
+      const feedback = document.getElementById('autofill-feedback');
+      
+      btn.disabled = true;
+      btn.innerHTML = `<span class="inline-block animate-spin mr-1.5">⏳</span><span>Auto-Filling in Visible Chromium...</span>`;
+      feedback.classList.remove('hidden');
+      feedback.innerHTML = `
+        <div class="flex items-center space-x-2 text-emerald-800 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span>Pilot active: Opening browser, filling personal details, matching screening answers...</span>
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`/api/jobs/${activeDrawerJob.id}/auto-fill`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            headless: false,
+            pause_for_review: true,
+            review_timeout_seconds: 15
+          })
+        });
+        const data = await res.json();
+        const r = data.result || {};
+
+        if (r.status === 'blocked_login') {
+          feedback.innerHTML = `
+            <div class="p-2.5 bg-amber-50 border border-amber-200 rounded-md text-amber-900 font-medium">
+              <strong>Sign-in / Gate Detected:</strong> ${escapeHtml(r.audit_notes)}
+            </div>
+          `;
+        } else if (r.status === 'needs_user_input') {
+          feedback.innerHTML = `
+            <div class="p-2.5 bg-amber-50 border border-amber-200 rounded-md text-amber-900 space-y-1">
+              <div class="font-bold">Form Partially Filled (${(r.fields_filled || []).length} inputs). Needs Your Input:</div>
+              <ul class="list-disc pl-4 text-[11px] space-y-0.5">
+                ${(r.unanswered_questions || []).map(q => `<li>${escapeHtml(q)}</li>`).join('')}
+              </ul>
+              <p class="text-[10px] text-amber-700 mt-1">Please answer directly in the browser window or save to Memory Vault.</p>
+            </div>
+          `;
+        } else {
+          feedback.innerHTML = `
+            <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-md text-emerald-900 space-y-1.5">
+              <div class="font-bold flex items-center space-x-1.5 text-xs">
+                <span>Pre-Filled ${(r.fields_filled || []).length} Fields Successfully!</span>
+              </div>
+              <p class="text-[11px] text-emerald-800 leading-snug">${escapeHtml(r.audit_notes)}</p>
+              <div class="text-[10px] text-slate-500 font-medium pt-1 border-t border-emerald-200/60">
+                Inputs highlighted in green. Inspect them on your screen and click <strong>Submit</strong> manually.
+              </div>
+            </div>
+          `;
+        }
+        loadData();
+      } catch (err) {
+        feedback.innerHTML = `<div class="p-2 bg-rose-50 border border-rose-200 rounded text-rose-800 font-medium">Error running pilot: ${err}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Re-Run Auto-Fill Pilot</span>
+        `;
+      }
+    }
+
+    // Closed-Loop Email Feedback Sync
+    async function triggerEmailSync(simulate = false) {
+      const btn = document.getElementById('btn-email-sync');
+      const origText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span>Syncing...</span>`;
+
+      try {
+        const res = await fetch('/api/email-sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ simulate: simulate })
+        });
+        const data = await res.json();
+        const events = data.events || [];
+        
+        if (events.length > 0) {
+          const summary = events.map(e => `• ${e.company}: ${e.status_label}`).join('\n');
+          alert(`Closed-Loop Recruiter Updates Received!\n\n${summary}\n\nStatuses & Excel tracker synchronized.`);
+        } else {
+          alert('Inbox checked: No new recruiter updates found at this time.');
+        }
+        loadData();
+      } catch (err) {
+        alert('Could not sync email replies: ' + err);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = origText;
+      }
+    }
+
+    // Outreach Modal
     async function openOutreachFromDrawer() {
       if (!activeDrawerJob) return;
       const res = await fetch(`/api/jobs/${activeDrawerJob.id}/outreach`, { method: 'POST' });
@@ -962,12 +1151,16 @@
     }
 
     function copyOutreach() {
-      const text = document.getElementById('outreach-text');
-      text.select();
-      navigator.clipboard.writeText(text.value);
+      const text = document.getElementById('outreach-text').value;
+      navigator.clipboard.writeText(text);
       const btn = document.getElementById('btn-copy-outreach');
-      btn.innerText = '✅ Copied!';
-      setTimeout(() => { btn.innerText = '📋 Copy to Clipboard'; }, 2000);
+      btn.innerHTML = `<span>Copied!</span>`;
+      setTimeout(() => {
+        btn.innerHTML = `
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span>Copy to Clipboard</span>
+        `;
+      }, 2000);
     }
 
     // Memory Vault
@@ -980,11 +1173,11 @@
 
       for (const [k, v] of Object.entries(data)) {
         const item = document.createElement('div');
-        item.className = 'p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between gap-3';
+        item.className = 'p-3 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-between gap-3';
         item.innerHTML = `
           <div>
-            <span class="font-semibold text-slate-800 capitalize text-xs">${k.replace(/_/g, ' ')}</span>
-            <p class="text-slate-600 mt-0.5 text-[11px]">${escapeHtml(v)}</p>
+            <span class="font-bold text-slate-900 capitalize text-xs">${k.replace(/_/g, ' ')}</span>
+            <p class="text-slate-600 mt-0.5 text-[11px] font-medium">${escapeHtml(v)}</p>
           </div>
         `;
         listEl.appendChild(item);
@@ -1008,105 +1201,6 @@
       document.getElementById('new-mem-key').value = '';
       document.getElementById('new-mem-val').value = '';
       openMemoryModal();
-    }
-
-    // Autonomous Browser Pilot Execution
-    async function executeBrowserAutoFill() {
-      if (!activeDrawerJob) return;
-      const btn = document.getElementById('btn-browser-autofill');
-      const feedback = document.getElementById('autofill-feedback');
-      
-      btn.disabled = true;
-      btn.innerHTML = `<span class="inline-block animate-spin mr-1.5">⏳</span><span>Auto-Filling in Visible Chromium...</span>`;
-      feedback.classList.remove('hidden');
-      feedback.innerHTML = `
-        <div class="flex items-center space-x-2 text-emerald-800 font-medium">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-          <span>Pilot launched: Opening browser, filling personal details, matching screening answers...</span>
-        </div>
-      `;
-
-      try {
-        const res = await fetch(`/api/jobs/${activeDrawerJob.id}/auto-fill`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            headless: false,
-            pause_for_review: true,
-            review_timeout_seconds: 15
-          })
-        });
-        const data = await res.json();
-        const r = data.result || {};
-
-        if (r.status === 'blocked_login') {
-          feedback.innerHTML = `
-            <div class="p-2.5 bg-amber-50 border border-amber-200 rounded-md text-amber-900 font-medium">
-              🔒 <strong>Sign-in / Gate Detected:</strong> ${escapeHtml(r.audit_notes)}
-            </div>
-          `;
-        } else if (r.status === 'needs_user_input') {
-          feedback.innerHTML = `
-            <div class="p-2.5 bg-amber-50 border border-amber-200 rounded-md text-amber-900 space-y-1">
-              <div class="font-bold">⚠️ Form Partially Filled (${(r.fields_filled || []).length} inputs). Needs Your Input:</div>
-              <ul class="list-disc pl-4 text-[11px] space-y-0.5">
-                ${(r.unanswered_questions || []).map(q => `<li>${escapeHtml(q)}</li>`).join('')}
-              </ul>
-              <p class="text-[10px] text-amber-700 mt-1">Please answer directly in the browser window or save to Memory Vault.</p>
-            </div>
-          `;
-        } else {
-          feedback.innerHTML = `
-            <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-md text-emerald-900 space-y-1.5">
-              <div class="font-bold flex items-center space-x-1.5 text-xs">
-                <span>✅</span>
-                <span>Pre-Filled ${(r.fields_filled || []).length} Fields Successfully!</span>
-              </div>
-              <p class="text-[11px] text-emerald-800 leading-snug">${escapeHtml(r.audit_notes)}</p>
-              <div class="text-[10px] text-slate-500 font-medium pt-1 border-t border-emerald-200/60">
-                Inputs highlighted in green. Inspect them on your screen and click <strong>Submit</strong> manually.
-              </div>
-            </div>
-          `;
-        }
-        loadData();
-      } catch (err) {
-        feedback.innerHTML = `<div class="p-2 bg-rose-50 border border-rose-200 rounded text-rose-800 font-medium">Error running pilot: ${err}</div>`;
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = `<span>⚡</span><span>Re-Run Auto-Fill Pilot</span>`;
-      }
-    }
-
-    // Closed-Loop Email Feedback Sync
-    async function triggerEmailSync(simulate = false) {
-      const btn = document.getElementById('btn-email-sync');
-      const origText = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = `<span>⏳</span><span>Syncing...</span>`;
-
-      try {
-        const res = await fetch('/api/email-sync', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ simulate: simulate })
-        });
-        const data = await res.json();
-        const events = data.events || [];
-        
-        if (events.length > 0) {
-          const summary = events.map(e => `• ${e.company}: ${e.status_label}`).join('\n');
-          alert(`📬 Closed-Loop Recruiter Updates Received!\n\n${summary}\n\nStatuses & Excel tracker synchronized.`);
-        } else {
-          alert('📬 Inbox checked: No new recruiter updates found at this time.');
-        }
-        loadData();
-      } catch (err) {
-        alert('Could not sync email replies: ' + err);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = origText;
-      }
     }
 
     // Candidate Profile & Resume Ingestion Management
@@ -1134,7 +1228,7 @@
         skillsContainer.innerHTML = '';
         (p.skills || []).forEach(s => {
           const pill = document.createElement('span');
-          pill.className = 'px-2 py-0.5 bg-blue-50 text-blue-800 border border-blue-200 rounded font-medium text-[11px]';
+          pill.className = 'px-2 py-0.5 bg-blue-50 text-blue-800 border border-blue-200/80 rounded-md font-medium text-[11px]';
           pill.innerText = s;
           skillsContainer.appendChild(pill);
         });
@@ -1159,7 +1253,7 @@
       btn.innerText = 'Parsing with RAG Engine...';
       statusEl.classList.remove('hidden');
       statusEl.className = 'text-[11px] font-medium p-2 rounded bg-blue-50 text-blue-800 border border-blue-200';
-      statusEl.innerText = `⏳ Ingesting ${file.name}, extracting skills taxonomy, contact info, and role inference...`;
+      statusEl.innerText = `Ingesting ${file.name}, extracting skills taxonomy, contact info, and role inference...`;
 
       const formData = new FormData();
       formData.append('file', file);
@@ -1172,7 +1266,7 @@
         const data = await res.json();
         if (res.ok) {
           statusEl.className = 'text-[11px] font-medium p-2 rounded bg-emerald-50 text-emerald-800 border border-emerald-200';
-          statusEl.innerText = `✅ Parsed ${file.name} successfully! Extracted ${(data.profile.skills || []).length} skills and candidate details.`;
+          statusEl.innerText = `Parsed ${file.name} successfully! Extracted ${(data.profile.skills || []).length} skills and candidate details.`;
           
           // Refresh profile fields & header badge
           document.getElementById('badge-name').innerText = data.profile.name || 'Candidate';
@@ -1184,11 +1278,11 @@
           loadData();
         } else {
           statusEl.className = 'text-[11px] font-medium p-2 rounded bg-rose-50 text-rose-800 border border-rose-200';
-          statusEl.innerText = `❌ Upload failed: ${data.detail || 'Could not parse resume.'}`;
+          statusEl.innerText = `Upload failed: ${data.detail || 'Could not parse resume.'}`;
         }
       } catch (err) {
         statusEl.className = 'text-[11px] font-medium p-2 rounded bg-rose-50 text-rose-800 border border-rose-200';
-        statusEl.innerText = '❌ Error uploading resume: ' + err;
+        statusEl.innerText = 'Error uploading resume: ' + err;
       } finally {
         btn.disabled = false;
         btn.innerText = 'Choose Resume File';
@@ -1222,7 +1316,7 @@
         });
         const data = await res.json();
         document.getElementById('badge-name').innerText = data.profile.name || 'Candidate';
-        alert('🎉 Candidate profile updated successfully!');
+        alert('Candidate profile updated successfully!');
         closeProfileModal();
       } catch (err) {
         alert('Error saving profile: ' + err);
@@ -1238,7 +1332,7 @@
       }[tag] || tag));
     }
 
-    // Initialize
+    // Initialize on page load
     loadData();
   </script>
 </body>
