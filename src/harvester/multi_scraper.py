@@ -52,21 +52,25 @@ def harvest_jobs_across_platforms(
     target_platforms = [platform_map.get(p.lower(), p) for p in raw_platforms]
 
     # Ingest profile to get dynamic role search titles
-    resume_path = cfg.candidate.resume_path
+    cand_p = storage.get_candidate_profile()
+    resume_path = cand_p.get("resume_path") or cfg.candidate.resume_path
     try:
         profile = parse_resume_to_profile(resume_path)
     except Exception:
         profile = CandidateProfile(
-            name=cfg.candidate.name,
-            email=cfg.candidate.email,
-            phone=cfg.candidate.phone,
-            city=cfg.candidate.city,
-            skills=["Python", "FastAPI", "SQL", "Machine Learning", "LLM"],
-            primary_roles=["AI Engineer", "Python Developer"]
+            name=cand_p.get("name") or cfg.candidate.name,
+            email=cand_p.get("email") or cfg.candidate.email,
+            phone=cand_p.get("phone") or cfg.candidate.phone,
+            city=cand_p.get("city") or cfg.candidate.city,
+            skills=cand_p.get("skills") or ["Python", "FastAPI", "SQL", "Machine Learning", "LLM"],
+            primary_roles=cand_p.get("primary_roles") or ["AI Engineer", "Python Developer"]
         )
 
+    cand_name = cand_p.get("name") or cfg.candidate.name
+    cand_phone = cand_p.get("phone") or cfg.candidate.phone
+    cand_city = cand_p.get("city") or cfg.candidate.city
     queries = search_terms or profile.primary_roles[:2] or ["AI Engineer", "Python Developer"]
-    location_query = f"{cfg.candidate.city}, India"
+    location_query = f"{cand_city}, India"
 
     summary = {
         "total_scraped": 0,
@@ -151,11 +155,11 @@ def harvest_jobs_across_platforms(
                         f"CTC Suggestion: {match_res.suggested_ctc_response}. Notice: Immediate."
                     ),
                     outreach_draft=(
-                        f"Subject: Application for {title} - {cfg.candidate.name}\n\n"
+                        f"Subject: Application for {title} - {cand_name}\n\n"
                         f"Hi Hiring Team at {company},\n\n"
                         f"I noticed your {title} opening in {location}. With hands-on experience in "
                         f"{', '.join(match_res.matched_skills[:3])}, I would love to connect and share my portfolio.\n\n"
-                        f"Best regards,\n{cfg.candidate.name}\n{cfg.candidate.phone}"
+                        f"Best regards,\n{cand_name}\n{cand_phone}"
                     )
                 )
 
