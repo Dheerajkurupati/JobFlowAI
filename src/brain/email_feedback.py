@@ -289,8 +289,8 @@ class EmailFeedbackEngine:
         host = os.getenv("EMAIL_IMAP_SERVER", imap_host)
 
         if not user or not pwd:
-            # Fallback to simulation mode if live credentials are not provided
-            return self.sync_simulated_feedback()
+            # Do NOT fall back to fake simulation when user clicks live sync
+            return []
 
         feedback_results = []
         try:

@@ -117,16 +117,7 @@ def harvest_jobs_across_platforms(
                 )
 
                 if not decision.is_accepted:
-                    # Log to Excel as Skipped with audit note
-                    storage.excel_tracker.log_application(
-                        company=company,
-                        job_title=title,
-                        location=location,
-                        job_link=job_url,
-                        status="Skipped",
-                        reason_notes=f"Skipped: {decision.rejection_reason}",
-                        work_type=work_type
-                    )
+                    # Filter out unqualified jobs from pipeline
                     existing_links.add(job_url)
                     summary["skipped"] += 1
                     continue

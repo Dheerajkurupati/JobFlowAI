@@ -77,11 +77,16 @@ async def get_jobs(
     search: Optional[str] = None,
     status: Optional[str] = "all",
     location: Optional[str] = "all",
+    work_type: Optional[str] = "all",
+    date_filter: Optional[str] = "all",
+    min_score: int = 0,
+    sort_by: Optional[str] = "newest",
     page: int = 1,
     page_size: int = 20
 ):
-    """Retrieve jobs with search, filtering, and pagination support."""
+    """Retrieve jobs with multi-dimensional search, filtering, sorting, and pagination."""
     all_jobs = storage.get_all_jobs()
+    today_str = date.today().isoformat()
     
     # 1. Filter by Status
     filtered = all_jobs
@@ -93,7 +98,21 @@ async def get_jobs(
         loc_lower = location.lower()
         filtered = [j for j in filtered if loc_lower in j.get("location", "").lower()]
 
-    # 3. Search query across company, title, skills, and notes
+    # 3. Filter by Work Type (Remote / Hybrid / On-site)
+    if work_type and work_type != "all":
+        wt_lower = work_type.lower()
+        filtered = [j for j in filtered if wt_lower in j.get("work_type", "").lower()]
+
+    # 4. Filter by Date (Today / All)
+    if date_filter and date_filter != "all":
+        if date_filter == "today":
+            filtered = [j for j in filtered if j.get("date") == today_str]
+
+    # 5. Filter by Minimum ATS Match Score
+    if min_score > 0:
+        filtered = [j for j in filtered if j.get("match_score", 0) >= min_score]
+
+    # 6. Search query across company, title, skills, and notes
     if search:
         q = search.lower().strip()
         filtered = [
@@ -105,6 +124,14 @@ async def get_jobs(
             or q in j.get("screening_notes", "").lower()
         ]
 
+    # 7. Sorting
+    if sort_by == "score":
+        filtered.sort(key=lambda x: x.get("match_score", 0), reverse=True)
+    elif sort_by == "company":
+        filtered.sort(key=lambda x: x.get("company", "").lower())
+    else:  # "newest" by default
+        filtered.sort(key=lambda x: (x.get("date", ""), x.get("match_score", 0)), reverse=True)
+
     # Overall pipeline counts
     counts = {
         "all": len(all_jobs),
@@ -114,6 +141,7 @@ async def get_jobs(
         "applied": sum(1 for j in all_jobs if j.get("status") == "applied"),
         "interview": sum(1 for j in all_jobs if j.get("status") == "interview"),
         "rejected": sum(1 for j in all_jobs if j.get("status") == "rejected"),
+        "today": sum(1 for j in all_jobs if j.get("date") == today_str),
     }
 
     # Grouping for Kanban view
@@ -351,6 +379,60 @@ async def trigger_harvest():
     return {"message": "Harvest complete", "summary": summary}
 
 
+@app.get("/api/excel-data")
+async def get_excel_data():
+    """Return live contents of data/Job_Tracker.xlsx for in-app viewing."""
+    excel_path = Path("data/Job_Tracker.xlsx")
+    if not excel_path.exists():
+        return {"applications": [], "contacts": [], "file_exists": False}
+    
+    import openpyxl
+    try:
+        wb = openpyxl.load_workbook(excel_path, data_only=True)
+    except Exception as e:
+        return {"applications": [], "contacts": [], "file_exists": True, "error": str(e)}
+    
+    applications = []
+    if "Applications" in wb.sheetnames:
+        ws_app = wb["Applications"]
+        for row in ws_app.iter_rows(min_row=2, values_only=True):
+            if any(row):
+                applications.append({
+                    "date": str(row[0] or ""),
+                    "company": str(row[1] or ""),
+                    "title": str(row[2] or ""),
+                    "location": str(row[3] or ""),
+                    "work_type": str(row[4] or ""),
+                    "d2c": str(row[5] or "-"),
+                    "job_link": str(row[6] or ""),
+                    "status": str(row[7] or "Applied"),
+                    "reason_notes": str(row[8] or "") if len(row) > 8 else ""
+                })
+                
+    contacts = []
+    if "Recruiter Contacts" in wb.sheetnames:
+        ws_con = wb["Recruiter Contacts"]
+        for row in ws_con.iter_rows(min_row=2, values_only=True):
+            if any(row):
+                contacts.append({
+                    "date": str(row[0] or ""),
+                    "company": str(row[1] or ""),
+                    "type": str(row[2] or ""),
+                    "name_title": str(row[3] or ""),
+                    "profile_url": str(row[4] or ""),
+                    "status": str(row[5] or "")
+                })
+
+    return {
+        "file_exists": True,
+        "file_path": str(excel_path.resolve()),
+        "applications": applications,
+        "contacts": contacts,
+        "total_applications": len(applications),
+        "total_contacts": len(contacts)
+    }
+
+
 @app.get("/api/export-excel")
 async def export_excel():
     """Trigger download of the formatted data/Job_Tracker.xlsx spreadsheet."""
@@ -414,17 +496,35 @@ async def auto_fill_job(job_id: str, req: Optional[AutoFillRequest] = None):
 @app.post("/api/email-sync")
 async def sync_emails(req: Optional[EmailSyncRequest] = None):
     """Sync recruiter replies, interview invites, coding assessments, and rejections into CRM."""
+    import os
     from src.brain.email_feedback import EmailFeedbackEngine
 
     simulate = req.simulate if req else False
     engine = EmailFeedbackEngine(storage=storage)
 
     if simulate:
-        results = engine.sync_simulated_feedback()
-    else:
-        results = engine.sync_live_inbox()
+        results = engine.sync_simulated_feedback(persist=False)
+        return {
+            "configured": True,
+            "is_simulation": True,
+            "message": f"Preview Simulation: Generated {len(results)} sample recruiter events for testing. Live CRM was not modified.",
+            "events": [r.model_dump() for r in results]
+        }
+    
+    # Check if live email credentials exist
+    has_creds = bool(os.getenv("EMAIL_ACCOUNT") or os.getenv("EMAIL_USER")) and bool(os.getenv("EMAIL_APP_PASSWORD") or os.getenv("EMAIL_PASSWORD"))
+    if not has_creds:
+        return {
+            "configured": False,
+            "is_simulation": False,
+            "message": "Gmail IMAP credentials not configured. Please add EMAIL_ACCOUNT and EMAIL_APP_PASSWORD in environment settings to automatically scan incoming recruiter emails.",
+            "events": []
+        }
 
+    results = engine.sync_live_inbox()
     return {
-        "message": f"Processed {len(results)} email loop events",
+        "configured": True,
+        "is_simulation": False,
+        "message": f"Scanned inbox: Processed {len(results)} recruiter updates.",
         "events": [r.model_dump() for r in results]
     }

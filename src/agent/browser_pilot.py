@@ -92,11 +92,17 @@ class BrowserPilot:
 
                 # 2. Check for Login Gate / CAPTCHA (Safety check)
                 if await self._detect_login_or_captcha(page):
+                    # If user is in visible mode, give them time to see the login requirement
+                    if not headless and review_timeout_seconds > 0:
+                        try:
+                            await page.wait_for_timeout(min(review_timeout_seconds, 5) * 1000)
+                        except Exception:
+                            pass
                     return ApplicationRunResult(
                         success=False,
                         status="blocked_login",
                         job_url=job_url,
-                        audit_notes="External login or CAPTCHA detected. Apply manually via direct link."
+                        audit_notes="External employer sign-in or CAPTCHA detected. Apply via your signed-in browser tab."
                     )
 
                 # 3. Fill Form Inputs

@@ -139,7 +139,7 @@
         </button>
 
         <!-- Closed-Loop Recruiter Sync -->
-        <button onclick="triggerEmailSync()" id="btn-email-sync" title="Check recruiter replies & interview updates via IMAP" class="px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 border border-slate-200 rounded-xl shadow-sm transition-all flex items-center space-x-1.5 bg-white">
+        <button onclick="openEmailSyncModal()" id="btn-email-sync" title="Recruiter email updates & interview sync" class="px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 border border-slate-200 rounded-xl shadow-sm transition-all flex items-center space-x-1.5 bg-white">
           <svg class="w-3.5 h-3.5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span class="hidden md:inline">Sync Recruiter Replies</span>
           <span class="md:hidden">Sync</span>
@@ -152,11 +152,11 @@
           <span id="mem-count-badge" class="px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-600 rounded font-mono font-bold">7</span>
         </button>
 
-        <!-- Excel Export -->
-        <a href="/api/export-excel" class="px-3.5 py-2 text-xs font-medium text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl shadow-sm transition-all flex items-center space-x-1.5">
+        <!-- Excel Spreadsheet Tracker Hub (View & Download) -->
+        <button onclick="openExcelModal()" class="px-3.5 py-2 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer">
           <svg class="w-3.5 h-3.5 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-          <span class="hidden sm:inline">Export .xlsx</span>
-        </a>
+          <span class="hidden sm:inline">Excel Tracker</span>
+        </button>
 
         <!-- Candidate Profile Button -->
         <button onclick="openProfileModal()" class="h-9 pl-2.5 pr-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 shadow-sm text-slate-800 flex items-center space-x-2 text-xs font-semibold transition-all" title="Manage Candidate Profile & Resume">
@@ -302,10 +302,9 @@
     <div class="elevation-card rounded-2xl p-5 flex-1 flex flex-col overflow-hidden">
       
       <!-- Unified Filter Toolbar -->
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-200/80 shrink-0">
-        
-        <!-- Status Tabs Segmented Control -->
-        <div class="flex items-center space-x-1.5 overflow-x-auto text-xs pb-1 lg:pb-0">
+      <!-- 1. Pipeline Status Tabs (Row 1 - Full Width, No Crowding) -->
+      <div class="flex items-center justify-between pb-3.5 border-b border-slate-200/80 shrink-0">
+        <div class="flex items-center space-x-1.5 overflow-x-auto text-xs pb-1 sm:pb-0">
           <button onclick="filterStatus('all')" id="tab-all" class="px-3.5 py-2 rounded-xl font-bold bg-slate-950 text-white shadow-sm transition-all flex items-center space-x-2 shrink-0">
             <span>All Positions</span>
             <span id="count-all" class="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-mono">0</span>
@@ -332,28 +331,72 @@
           </button>
         </div>
 
-        <!-- Search Input & Location Hub Selector -->
-        <div class="flex items-center space-x-3 w-full lg:w-auto">
+        <div class="hidden md:flex items-center space-x-2 text-xs text-slate-500 font-medium shrink-0">
+          <span id="active-results-indicator">Autonomous Pipeline</span>
+        </div>
+      </div>
+
+      <!-- 2. Search & Filter Bar (Row 2 - Unified Horizontal Row, No Dangling Line) -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pt-3.5 pb-2 shrink-0">
+        
+        <!-- Search Input -->
+        <div class="relative w-full lg:w-80">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input 
+            type="text" 
+            id="search-input" 
+            oninput="handleSearchInput(event)"
+            placeholder="Search company, title, skills..." 
+            class="w-full text-xs pl-10 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:bg-white text-slate-900 transition-all placeholder:text-slate-400"
+          />
+        </div>
+
+        <!-- Filter Dropdown Group (Single Horizontal Row) -->
+        <div class="flex items-center space-x-2 overflow-x-auto shrink-0 pb-1 lg:pb-0">
           
-          <div class="relative flex-1 lg:w-72">
-            <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input 
-              type="text" 
-              id="search-input" 
-              oninput="handleSearchInput(event)"
-              placeholder="Search company, title, skills..." 
-              class="w-full text-xs pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 focus:bg-white text-slate-900 transition-all placeholder:text-slate-400"
-            />
+          <!-- Date Filter -->
+          <div class="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs">
+            <span class="text-[11px] font-semibold text-slate-400 mr-1.5">Date:</span>
+            <select id="date-select" onchange="filterDate(this.value)" class="bg-transparent text-slate-700 text-xs font-semibold focus:outline-none cursor-pointer">
+              <option value="all">All Dates</option>
+              <option value="today">Hunted Today</option>
+            </select>
           </div>
 
-          <select id="location-select" onchange="filterLocation(this.value)" class="text-xs bg-slate-50 border border-slate-300 text-slate-700 px-3.5 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-semibold cursor-pointer shrink-0">
-            <option value="all">Pan-India & Global</option>
-            <option value="hyderabad">Hyderabad Hub</option>
-            <option value="bengaluru">Bengaluru Hub</option>
-            <option value="chennai">Chennai Hub</option>
-            <option value="pune">Pune Hub</option>
-            <option value="remote">Remote Only</option>
-          </select>
+          <!-- Work Mode Filter -->
+          <div class="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs">
+            <span class="text-[11px] font-semibold text-slate-400 mr-1.5">Mode:</span>
+            <select id="worktype-select" onchange="filterWorkType(this.value)" class="bg-transparent text-slate-700 text-xs font-semibold focus:outline-none cursor-pointer">
+              <option value="all">All Modes</option>
+              <option value="remote">Remote</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="on-site">On-site</option>
+            </select>
+          </div>
+
+          <!-- Location Filter -->
+          <div class="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs">
+            <span class="text-[11px] font-semibold text-slate-400 mr-1.5">Location:</span>
+            <select id="location-select" onchange="filterLocation(this.value)" class="bg-transparent text-slate-700 text-xs font-semibold focus:outline-none cursor-pointer">
+              <option value="all">All Locations</option>
+              <option value="hyderabad">Hyderabad</option>
+              <option value="bengaluru">Bengaluru</option>
+              <option value="chennai">Chennai</option>
+              <option value="pune">Pune</option>
+              <option value="remote">Remote Only</option>
+            </select>
+          </div>
+
+          <!-- Sort Order Selector -->
+          <div class="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs">
+            <span class="text-[11px] font-semibold text-slate-400 mr-1.5">Sort:</span>
+            <select id="sort-select" onchange="filterSort(this.value)" class="bg-transparent text-slate-700 text-xs font-semibold focus:outline-none cursor-pointer">
+              <option value="newest">Newest First</option>
+              <option value="score">Highest Match</option>
+              <option value="company">Company (A-Z)</option>
+            </select>
+          </div>
+
         </div>
       </div>
 
@@ -513,29 +556,44 @@
     <!-- Drawer Body -->
     <div class="flex-1 overflow-y-auto p-6 space-y-5 text-xs">
       
-      <!-- Autonomous Form-Filler Pilot Console -->
-      <div class="p-5 bg-emerald-50/60 rounded-2xl border border-emerald-200/90 space-y-3">
+      <!-- Primary Action: Apply in Signed-in Browser -->
+      <div class="p-5 bg-gradient-to-br from-blue-50/90 to-indigo-50/70 rounded-2xl border border-blue-200/90 space-y-3 shadow-sm">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <h5 class="font-extrabold text-emerald-950 text-xs">Playwright Browser Auto-Fill Pilot</h5>
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse"></span>
+            <h5 class="font-extrabold text-blue-950 text-xs">Direct Application & 1-Click Fast-Fill</h5>
           </div>
-          <span class="text-[10px] font-mono font-bold bg-white text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-300">HITL Gate Active</span>
+          <span class="text-[10px] font-mono font-bold bg-white text-blue-800 px-2 py-0.5 rounded-full border border-blue-300">Recommended</span>
         </div>
-        <p class="text-xs text-emerald-900 leading-relaxed font-normal">
-          Opens this job posting in a visible Chromium browser, fills your contact details & screening answers from your Memory Vault, highlights all filled fields in green, and halts before the final Submit button for your review.
+        <p class="text-xs text-blue-900 leading-relaxed font-normal">
+          Opens this posting directly in a new tab in <strong>this browser</strong> where you are already logged into LinkedIn / Indeed. Use the Quick-Copy bar below to paste answers instantly.
         </p>
-        <div class="flex items-center gap-2 pt-1">
-          <button onclick="executeBrowserAutoFill()" id="btn-browser-autofill" class="flex-1 py-2.5 px-4 bg-slate-950 hover:bg-slate-800 text-white rounded-xl font-bold text-xs shadow-sm transition-all flex items-center justify-center space-x-2">
-            <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            <span>Launch Browser Auto-Fill Pilot</span>
-          </button>
-          <a id="drawer-direct-btn" href="#" target="_blank" class="py-2.5 px-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-xl font-semibold text-xs shadow-sm transition-all flex items-center justify-center space-x-1 shrink-0">
-            <span>Direct Link</span>
+        <div class="pt-1 flex flex-col sm:flex-row gap-2">
+          <a id="drawer-main-apply-btn" href="#" target="_blank" rel="noopener noreferrer" class="flex-1 py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs shadow-sm transition-all flex items-center justify-center space-x-2">
+            <span>Open & Apply in This Browser</span>
             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           </a>
+          <button onclick="executeBrowserAutoFill()" id="btn-browser-autofill" class="py-2.5 px-3 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 rounded-xl font-semibold text-xs shadow-sm transition-all flex items-center justify-center space-x-1.5 shrink-0" title="Optional: Run Playwright Chromium for open career portal forms">
+            <svg class="w-3.5 h-3.5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>Playwright Pilot</span>
+          </button>
         </div>
-        <div id="autofill-feedback" class="hidden text-xs p-3.5 bg-white rounded-xl border border-emerald-200 text-slate-800 space-y-1.5 shadow-sm"></div>
+        <div id="autofill-feedback" class="hidden text-xs p-3.5 bg-white rounded-xl border border-blue-200 text-slate-800 space-y-1.5 shadow-sm"></div>
+      </div>
+
+      <!-- 1-Click Fast-Fill Application Assistant -->
+      <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200/90 space-y-3">
+        <div class="flex items-center justify-between">
+          <h4 class="font-bold text-slate-900 uppercase tracking-wider text-[10px] font-mono flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span>1-Click Fast-Fill Copier</span>
+          </h4>
+          <span class="text-[10px] text-slate-500 font-medium">Click any button to copy & paste into form</span>
+        </div>
+        
+        <div id="drawer-quick-copy-grid" class="grid grid-cols-2 gap-2 text-xs">
+          <!-- Populated dynamically via JS -->
+        </div>
       </div>
 
       <!-- Application Screening Verification -->
@@ -579,9 +637,171 @@
   </aside>
 
   <!-- ========================================================================= -->
-  <!-- 6. MODALS: MEMORY VAULT, OUTREACH, AND PROFILE ENGINE                     -->
+  <!-- 6. MODALS: EXCEL TRACKER, EMAIL SYNC, MEMORY VAULT, AND PROFILE ENGINE     -->
   <!-- ========================================================================= -->
-  
+
+  <!-- EXCEL TRACKER HUB MODAL (View Live & Download) -->
+  <div id="excel-modal" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-4xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] flex flex-col">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b pb-3.5">
+        <div>
+          <div class="flex items-center space-x-2">
+            <h3 class="text-base font-extrabold text-slate-950 tracking-tight">Job_Tracker.xlsx Master Spreadsheet</h3>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold">Live Local File</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Stored locally on your disk: <code class="text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded font-mono text-[11px]">data/Job_Tracker.xlsx</code>
+          </p>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <button onclick="loadExcelModalData()" class="p-2 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition-colors" title="Reload from disk">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          </button>
+          <a href="/api/export-excel" download class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-sm transition-all flex items-center space-x-1.5">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download .xlsx Copy</span>
+          </a>
+          <button onclick="closeExcelModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 font-bold">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sheet Tabs (Applications vs Recruiter Contacts) -->
+      <div class="flex items-center space-x-2 border-b pb-2 text-xs">
+        <button onclick="switchExcelTab('apps')" id="btn-excel-tab-apps" class="px-3 py-1.5 rounded-lg font-bold bg-slate-950 text-white shadow-sm flex items-center space-x-2">
+          <span>Sheet 1: Applications Log</span>
+          <span id="excel-badge-apps" class="px-1.5 py-0.2 rounded bg-white/20 text-[10px] font-mono">0</span>
+        </button>
+        <button onclick="switchExcelTab('contacts')" id="btn-excel-tab-contacts" class="px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 flex items-center space-x-2">
+          <span>Sheet 2: Recruiter Contacts</span>
+          <span id="excel-badge-contacts" class="px-1.5 py-0.2 rounded bg-slate-200 text-[10px] font-mono">0</span>
+        </button>
+      </div>
+
+      <!-- Sheet Table Content -->
+      <div class="flex-1 overflow-y-auto border border-slate-200 rounded-xl bg-slate-50/50">
+        
+        <!-- Applications Sheet View -->
+        <div id="excel-view-apps" class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-slate-900 text-white sticky top-0 z-10 text-[10px] uppercase font-mono tracking-wider">
+              <tr>
+                <th class="py-2.5 px-3">Date</th>
+                <th class="py-2.5 px-3">Company</th>
+                <th class="py-2.5 px-3">Job Title</th>
+                <th class="py-2.5 px-3">Location</th>
+                <th class="py-2.5 px-3">Work Type</th>
+                <th class="py-2.5 px-3">Job Link</th>
+                <th class="py-2.5 px-3">Status</th>
+                <th class="py-2.5 px-3">Reason / Notes</th>
+              </tr>
+            </thead>
+            <tbody id="excel-tbody-apps" class="bg-white divide-y divide-slate-200">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+          <div id="excel-empty-apps" class="hidden p-8 text-center text-slate-400 space-y-1">
+            <p class="font-bold text-slate-600 text-xs">No Applications Logged Yet</p>
+            <p class="text-[11px]">Click "Mark as Applied" on any position to record it as Row 2 in your Excel spreadsheet.</p>
+          </div>
+        </div>
+
+        <!-- Contacts Sheet View -->
+        <div id="excel-view-contacts" class="hidden overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-slate-900 text-white sticky top-0 z-10 text-[10px] uppercase font-mono tracking-wider">
+              <tr>
+                <th class="py-2.5 px-3">Date</th>
+                <th class="py-2.5 px-3">Company</th>
+                <th class="py-2.5 px-3">Contact Type</th>
+                <th class="py-2.5 px-3">Name - Title</th>
+                <th class="py-2.5 px-3">Profile URL</th>
+                <th class="py-2.5 px-3">Status</th>
+              </tr>
+            </thead>
+            <tbody id="excel-tbody-contacts" class="bg-white divide-y divide-slate-200">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+          <div id="excel-empty-contacts" class="hidden p-8 text-center text-slate-400 space-y-1">
+            <p class="font-bold text-slate-600 text-xs">No Recruiter Contacts Logged Yet</p>
+            <p class="text-[11px]">Recruiter outreach and inbound contacts are recorded here.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Explanatory Footer Callout -->
+      <div class="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl text-emerald-950 text-[11px] flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="text-emerald-600 font-bold">✓ Permanent Local Storage:</span>
+          <span>Every application is saved immediately into <code class="font-mono bg-white px-1 py-0.5 rounded border border-emerald-300">data/Job_Tracker.xlsx</code> on your Mac.</span>
+        </div>
+        <span class="text-emerald-800 font-semibold">Ready for offline viewing in Excel / Numbers</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL SYNC HUB MODAL -->
+  <div id="email-sync-modal" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <h3 class="text-base font-extrabold text-slate-950 tracking-tight">Recruiter Email Loop & Feedback Sync</h3>
+          <p class="text-xs text-slate-500">Auto-detect interview invitations, coding tests, and recruiter decisions.</p>
+        </div>
+        <button onclick="closeEmailSyncModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 font-bold">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs text-slate-700 leading-relaxed">
+        <div class="flex items-center space-x-2 text-slate-900 font-bold">
+          <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          <span>Gmail IMAP Integration Status</span>
+        </div>
+        <p>
+          JobFlow connects securely via IMAP (SSL) to your Gmail account to read inbound recruiter communications:
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-slate-600">
+          <li><strong>Interview Invitations</strong>: Flags job as "Interview Scheduled" 📅</li>
+          <li><strong>Online Assessments</strong>: Flags job as "Needs Input" 💻 (HackerRank, LeetCode, Codility)</li>
+          <li><strong>Application Status</strong>: Updates Excel tracker & CRM automatically</li>
+        </ul>
+      </div>
+
+      <div class="p-4 bg-blue-50/70 border border-blue-200 rounded-xl space-y-2 text-xs">
+        <span class="font-bold text-blue-950">How to Connect Your Real Inbox:</span>
+        <p class="text-blue-800 leading-relaxed text-[11px]">
+          Add your Google Account and an <strong>App Password</strong> (from Google Account Security) into your local <code class="bg-white px-1 py-0.5 rounded border border-blue-300 font-mono">.env</code>:
+        </p>
+        <pre class="bg-slate-900 text-emerald-400 p-2.5 rounded-lg font-mono text-[10px] overflow-x-auto">EMAIL_ACCOUNT="your_email@gmail.com"
+EMAIL_APP_PASSWORD="xxxx xxxx xxxx xxxx"</pre>
+      </div>
+
+      <div id="email-sync-preview-results" class="hidden p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs">
+        <!-- Rendered simulation results -->
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t">
+        <button onclick="runSimulationPreview()" id="btn-run-simulation" class="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all">
+          <span>Run Preview Simulation</span>
+        </button>
+        <div class="flex items-center space-x-2">
+          <button onclick="closeEmailSyncModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">Close</button>
+          <button onclick="runLiveEmailSync()" id="btn-live-sync" class="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-all flex items-center space-x-1.5">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Scan Live Inbox</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MEMORY VAULT MODAL -->
   <div id="memory-modal" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[85vh] flex flex-col">
@@ -756,6 +976,9 @@
   <script>
     let currentStatusFilter = 'all';
     let currentLocationFilter = 'all';
+    let currentWorkTypeFilter = 'all';
+    let currentDateFilter = 'all';
+    let currentSort = 'newest';
     let currentSearch = '';
     let currentPage = 1;
     const PAGE_SIZE = 20;
@@ -766,6 +989,9 @@
       const params = new URLSearchParams({
         status: currentStatusFilter,
         location: currentLocationFilter,
+        work_type: currentWorkTypeFilter,
+        date_filter: currentDateFilter,
+        sort_by: currentSort,
         search: currentSearch,
         page: currentPage,
         page_size: PAGE_SIZE
@@ -800,6 +1026,7 @@
     function renderTable(jobs, pagination) {
       const tbody = document.getElementById('table-body');
       tbody.innerHTML = '';
+      const todayStr = new Date().toISOString().split('T')[0];
 
       if (jobs.length === 0) {
         tbody.innerHTML = `
@@ -810,8 +1037,8 @@
                   <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                 </div>
                 <div>
-                  <h4 class="text-sm font-extrabold text-slate-900 tracking-tight">Your Pipeline is Clean</h4>
-                  <p class="text-xs text-slate-500 mt-1 leading-relaxed">No applications tracked yet. Paste a job link in the instant ingestion bar above to analyze ATS match, or click below to hunt active roles across LinkedIn, Indeed, Glassdoor & ZipRecruiter.</p>
+                  <h4 class="text-sm font-extrabold text-slate-900 tracking-tight">No Matching Positions Found</h4>
+                  <p class="text-xs text-slate-500 mt-1 leading-relaxed">No roles match your current filter selection. Try switching filters or click below to hunt active roles.</p>
                 </div>
                 <div class="pt-1">
                   <button onclick="triggerHarvest()" class="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-all">
@@ -841,7 +1068,11 @@
                 </div>
                 <div>
                   <div class="font-bold text-slate-950 group-hover:text-blue-600 transition-colors text-xs leading-snug">${escapeHtml(job.title)}</div>
-                  <div class="text-[11px] text-slate-500 font-medium">${escapeHtml(job.company)} <span class="text-slate-300">•</span> ${job.date}</div>
+                  <div class="text-[11px] text-slate-500 font-medium mt-0.5">
+                    <span>${escapeHtml(job.company)}</span>
+                    <span class="text-slate-300 mx-1">•</span>
+                    <span class="font-mono text-slate-400 text-[10px]">${job.date}</span>
+                  </div>
                 </div>
               </div>
             </td>
@@ -863,15 +1094,15 @@
               ${escapeHtml(job.screening_notes || 'All requirements match candidate profile.')}
             </td>
             <td class="py-3.5 px-5 text-right space-x-1.5" onclick="event.stopPropagation()">
-              <a href="${escapeHtml(job.job_link)}" target="_blank" title="Open Job Posting on Job Board" class="px-2.5 py-1.5 text-[11px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 rounded-lg transition-colors inline-flex items-center gap-1">
+              <a href="${escapeHtml(job.job_link)}" target="_blank" rel="noopener noreferrer" title="Open Job in Signed-in Browser" class="px-2.5 py-1.5 text-[11px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 rounded-lg transition-colors inline-flex items-center gap-1">
                 <span>Apply ↗</span>
               </a>
-              <button onclick="openDrawerWithJobId('${job.id}')" title="Inspect & Launch Auto-Fill Pilot" class="px-3 py-1.5 text-[11px] font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors inline-flex items-center gap-1">
+              <button onclick="openDrawerWithJobId('${job.id}')" title="Inspect & 1-Click Fast-Fill" class="px-3 py-1.5 text-[11px] font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors inline-flex items-center gap-1">
                 <svg class="w-3 h-3 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                <span>Auto-Fill</span>
+                <span>Cockpit</span>
               </button>
               ${job.status !== 'applied' ? `
-                <button onclick="approveDirect('${job.id}')" title="Log application to Excel tracker" class="px-2.5 py-1.5 text-[11px] font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors inline-flex items-center gap-1">
+                <button onclick="approveDirect('${job.id}')" title="Log application directly into Job_Tracker.xlsx" class="px-2.5 py-1.5 text-[11px] font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors inline-flex items-center gap-1">
                   <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                   <span>Log Applied</span>
                 </button>
@@ -996,7 +1227,7 @@
     }
 
     // Drawer Inspector
-    function openDrawer(job) {
+    async function openDrawer(job) {
       activeDrawerJob = job;
       document.getElementById('drawer-title').innerText = job.title;
       document.getElementById('drawer-company').innerText = job.company;
@@ -1006,9 +1237,9 @@
       document.getElementById('drawer-screening-notes').innerText = job.screening_notes || 'All requirements match candidate profile.';
 
       const linkEl = document.getElementById('drawer-link');
-      linkEl.href = job.job_link;
-      const directBtn = document.getElementById('drawer-direct-btn');
-      if (directBtn) directBtn.href = job.job_link;
+      if (linkEl) linkEl.href = job.job_link;
+      const mainApplyBtn = document.getElementById('drawer-main-apply-btn');
+      if (mainApplyBtn) mainApplyBtn.href = job.job_link;
 
       const skillsEl = document.getElementById('drawer-skills');
       skillsEl.innerHTML = '';
@@ -1019,6 +1250,9 @@
         skillsEl.appendChild(badge);
       });
 
+      // Populate Quick-Copy Fast-Fill Grid
+      await renderQuickCopyGrid();
+
       const fb = document.getElementById('autofill-feedback');
       if (fb) {
         fb.classList.add('hidden');
@@ -1028,13 +1262,85 @@
       if (afBtn) {
         afBtn.disabled = false;
         afBtn.innerHTML = `
-          <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          <span>Launch Browser Auto-Fill Pilot</span>
+          <svg class="w-3.5 h-3.5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Playwright Pilot</span>
         `;
       }
 
       document.getElementById('drawer-backdrop').classList.remove('hidden');
       document.getElementById('cockpit-drawer').classList.remove('translate-x-full');
+    }
+
+    let cachedProfileForQuickCopy = null;
+    let cachedMemoryForQuickCopy = null;
+
+    async function renderQuickCopyGrid() {
+      const container = document.getElementById('drawer-quick-copy-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      try {
+        if (!cachedProfileForQuickCopy) {
+          const pRes = await fetch('/api/profile');
+          cachedProfileForQuickCopy = await pRes.json();
+        }
+        if (!cachedMemoryForQuickCopy) {
+          const mRes = await fetch('/api/memory');
+          cachedMemoryForQuickCopy = await mRes.json();
+        }
+      } catch (e) {
+        // Fallback
+      }
+
+      const p = cachedProfileForQuickCopy || {};
+      const m = cachedMemoryForQuickCopy || {};
+
+      const items = [
+        { label: 'Full Name', value: p.name || 'Kurupati Dheeraj' },
+        { label: 'Email', value: p.email || 'dheerajkurupati040804@gmail.com' },
+        { label: 'Phone', value: p.phone || '+91 9014636588' },
+        { label: 'Current City', value: p.city || 'Hyderabad' },
+        { label: 'LinkedIn', value: p.linkedin || 'https://linkedin.com/in/dheeraj-kurupati04' },
+        { label: 'GitHub', value: p.github || 'https://github.com/Dheerajkurupati' },
+        { label: 'Notice Period', value: m.notice_period || 'Immediate (0 days)' },
+        { label: 'Expected CTC', value: m.expected_ctc || 'Negotiable / As per company budget' },
+        { label: 'Relocation', value: m.willing_to_relocate || 'Yes, to Hyderabad, Bengaluru, Chennai, or Pune' },
+        { label: 'Hybrid Work', value: m.comfortable_with_hybrid || 'Yes' },
+      ];
+
+      items.forEach(it => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'p-2 text-left bg-white hover:bg-blue-50/70 border border-slate-200 hover:border-blue-300 rounded-xl transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)] flex flex-col justify-between group';
+        btn.onclick = () => copyQuickValue(btn, it.value, it.label);
+        btn.innerHTML = `
+          <div class="flex items-center justify-between w-full">
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight group-hover:text-blue-700">${escapeHtml(it.label)}</span>
+            <span class="text-[10px] font-mono text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity font-bold">Copy</span>
+          </div>
+          <span class="text-xs font-semibold text-slate-900 truncate w-full mt-0.5">${escapeHtml(it.value)}</span>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function copyQuickValue(btn, val, label) {
+      navigator.clipboard.writeText(val);
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = `
+        <div class="flex items-center justify-center h-full py-1">
+          <span class="text-xs font-bold text-emerald-700 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Copied!</span>
+          </span>
+        </div>
+      `;
+      btn.classList.add('bg-emerald-50', 'border-emerald-300');
+      showToast(`Copied ${label} to clipboard!`, 'success');
+      setTimeout(() => {
+        btn.innerHTML = originalHtml;
+        btn.classList.remove('bg-emerald-50', 'border-emerald-300');
+      }, 1500);
     }
 
     function closeDrawer() {
@@ -1053,13 +1359,17 @@
 
     async function executeDrawerApproval() {
       if (!activeDrawerJob) return;
+      const comp = activeDrawerJob.company;
+      const tit = activeDrawerJob.title;
       await fetch(`/api/jobs/${activeDrawerJob.id}/approve`, { method: 'POST' });
       closeDrawer();
+      showToast(`✓ Logged "${comp} - ${tit}" into Job_Tracker.xlsx!`, 'success');
       loadData();
     }
 
     async function approveDirect(jobId) {
       await fetch(`/api/jobs/${jobId}/approve`, { method: 'POST' });
+      showToast(`✓ Logged application into Job_Tracker.xlsx!`, 'success');
       loadData();
     }
 
@@ -1193,49 +1503,63 @@
         const data = await res.json();
         const r = data.result || {};
 
-        if (!r.success || r.status === 'error' || (r.audit_notes && r.audit_notes.toLowerCase().includes('error'))) {
+        if (r.status === 'blocked_login') {
           feedback.innerHTML = `
-            <div class="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-900 space-y-1.5">
-              <div class="font-bold flex items-center space-x-1.5 text-xs text-rose-700">
-                <svg class="w-4 h-4 text-rose-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <span>Browser Pilot Navigation Alert</span>
-              </div>
-              <p class="text-xs text-rose-800 leading-snug">${escapeHtml(r.audit_notes || 'Could not load application link.')}</p>
-              <div class="text-[11px] text-rose-600 pt-1 border-t border-rose-200/60 font-medium">
-                The target application page could not be resolved. Please verify that the posting is live and reachable.
-              </div>
-            </div>
-          `;
-        } else if (r.status === 'blocked_login') {
-          feedback.innerHTML = `
-            <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 font-medium space-y-1">
-              <div class="font-bold flex items-center space-x-1.5 text-xs text-amber-800">
+            <div class="p-4 bg-amber-50/90 border border-amber-300 rounded-xl text-amber-950 space-y-2.5">
+              <div class="font-bold flex items-center space-x-2 text-xs text-amber-900">
                 <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                <span>Login Gate / Verification Detected</span>
+                <span>Employer Sign-In / Auth Wall Required</span>
               </div>
-              <p class="text-xs text-amber-800">${escapeHtml(r.audit_notes)}</p>
+              <p class="text-xs text-amber-900 leading-relaxed">
+                This platform (e.g. LinkedIn / Workday) requires an active authenticated account to access the direct application form. In autonomous guest mode, session cookies are not stored.
+              </p>
+              <div class="pt-2 border-t border-amber-200/80 flex items-center justify-between">
+                <span class="text-[11px] text-amber-800 font-medium">Apply with your signed-in browser:</span>
+                <a href="${activeDrawerJob.job_link}" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg text-xs transition-colors flex items-center space-x-1 shadow-sm">
+                  <span>Open Job Posting</span>
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
+              </div>
             </div>
           `;
         } else if (r.status === 'needs_user_input') {
           feedback.innerHTML = `
-            <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 space-y-1.5">
-              <div class="font-bold text-xs">Form Partially Filled (${(r.fields_filled || []).length} inputs). Needs Your Input:</div>
-              <ul class="list-disc pl-4 text-xs space-y-0.5">
+            <div class="p-4 bg-amber-50 border border-amber-300 rounded-xl text-amber-950 space-y-2">
+              <div class="font-bold text-xs text-amber-900">Form Partially Filled (${(r.fields_filled || []).length} inputs). Needs Your Input:</div>
+              <ul class="list-disc pl-4 text-xs space-y-1 text-amber-900">
                 ${(r.unanswered_questions || []).map(q => `<li>${escapeHtml(q)}</li>`).join('')}
               </ul>
-              <p class="text-[11px] text-amber-700 mt-1">Please answer directly in the browser window or save to Memory Vault.</p>
+              <p class="text-[11px] text-amber-800 font-medium pt-1 border-t border-amber-200">
+                You can answer these once in the <strong>Memory Vault</strong> to auto-fill them automatically for all future jobs!
+              </p>
+            </div>
+          `;
+        } else if (r.success || r.status === 'success') {
+          feedback.innerHTML = `
+            <div class="p-4 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-950 space-y-2">
+              <div class="font-bold flex items-center space-x-2 text-xs text-emerald-900">
+                <svg class="w-4 h-4 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Pre-Filled ${(r.fields_filled || []).length} Fields Successfully!</span>
+              </div>
+              <p class="text-xs text-emerald-900 leading-snug">${escapeHtml(r.audit_notes || 'All candidate details entered into form inputs.')}</p>
+              <div class="text-[11px] text-emerald-800 font-medium pt-1.5 border-t border-emerald-200">
+                Inputs highlighted in green on your screen. Inspect them and click <strong>Submit</strong> manually.
+              </div>
             </div>
           `;
         } else {
           feedback.innerHTML = `
-            <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 space-y-1.5">
-              <div class="font-bold flex items-center space-x-1.5 text-xs">
-                <svg class="w-4 h-4 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Pre-Filled ${(r.fields_filled || []).length} Fields Successfully!</span>
+            <div class="p-4 bg-rose-50 border border-rose-300 rounded-xl text-rose-950 space-y-1.5">
+              <div class="font-bold flex items-center space-x-2 text-xs text-rose-800">
+                <svg class="w-4 h-4 text-rose-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>Navigation Notice</span>
               </div>
-              <p class="text-xs text-emerald-800 leading-snug">${escapeHtml(r.audit_notes)}</p>
-              <div class="text-[11px] text-slate-500 font-medium pt-1.5 border-t border-emerald-200/60">
-                Inputs highlighted in green. Inspect them on your screen and click <strong>Submit</strong> manually.
+              <p class="text-xs text-rose-900 leading-snug">${escapeHtml(r.audit_notes || 'The destination form could not be opened automatically.')}</p>
+              <div class="pt-2 border-t border-rose-200 flex items-center justify-between">
+                <span class="text-[11px] text-rose-800 font-medium">Open directly in browser:</span>
+                <a href="${activeDrawerJob.job_link}" target="_blank" rel="noopener noreferrer" class="px-3 py-1 bg-rose-700 hover:bg-rose-800 text-white font-bold rounded-lg text-xs transition-colors flex items-center space-x-1">
+                  <span>Open Job ↗</span>
+                </a>
               </div>
             </div>
           `;
@@ -1252,12 +1576,152 @@
       }
     }
 
-    // Closed-Loop Email Feedback Sync
-    async function triggerEmailSync() {
-      const btn = document.getElementById('btn-email-sync');
-      const origText = btn.innerHTML;
+    function filterDate(d) {
+      currentDateFilter = d;
+      currentPage = 1;
+      loadData();
+    }
+
+    function filterWorkType(wt) {
+      currentWorkTypeFilter = wt;
+      currentPage = 1;
+      loadData();
+    }
+
+    function filterSort(s) {
+      currentSort = s;
+      currentPage = 1;
+      loadData();
+    }
+
+    // Excel Modal Hub Controller (Live View & Download)
+    let activeExcelTab = 'apps';
+    let cachedExcelData = null;
+
+    async function openExcelModal() {
+      document.getElementById('excel-modal').classList.remove('hidden');
+      await loadExcelModalData();
+    }
+
+    function closeExcelModal() {
+      document.getElementById('excel-modal').classList.add('hidden');
+    }
+
+    function switchExcelTab(tab) {
+      activeExcelTab = tab;
+      const btnApps = document.getElementById('btn-excel-tab-apps');
+      const btnContacts = document.getElementById('btn-excel-tab-contacts');
+      const viewApps = document.getElementById('excel-view-apps');
+      const viewContacts = document.getElementById('excel-view-contacts');
+
+      if (tab === 'apps') {
+        btnApps.className = "px-3 py-1.5 rounded-lg font-bold bg-slate-950 text-white shadow-sm flex items-center space-x-2";
+        btnContacts.className = "px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 flex items-center space-x-2";
+        viewApps.classList.remove('hidden');
+        viewContacts.classList.add('hidden');
+      } else {
+        btnContacts.className = "px-3 py-1.5 rounded-lg font-bold bg-slate-950 text-white shadow-sm flex items-center space-x-2";
+        btnApps.className = "px-3 py-1.5 rounded-lg font-medium text-slate-600 hover:bg-slate-100 flex items-center space-x-2";
+        viewContacts.classList.remove('hidden');
+        viewApps.classList.add('hidden');
+      }
+    }
+
+    async function loadExcelModalData() {
+      try {
+        const res = await fetch('/api/excel-data');
+        const data = await res.json();
+        cachedExcelData = data;
+
+        const apps = data.applications || [];
+        const contacts = data.contacts || [];
+
+        document.getElementById('excel-badge-apps').innerText = apps.length;
+        document.getElementById('excel-badge-contacts').innerText = contacts.length;
+
+        // Render Applications Sheet
+        const tbodyApps = document.getElementById('excel-tbody-apps');
+        tbodyApps.innerHTML = '';
+        const emptyApps = document.getElementById('excel-empty-apps');
+
+        if (apps.length === 0) {
+          emptyApps.classList.remove('hidden');
+        } else {
+          emptyApps.classList.add('hidden');
+          apps.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-slate-50 transition-colors text-slate-800';
+            const statusClass = row.status === 'Applied' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
+                               row.status === 'Interview' ? 'bg-blue-100 text-blue-800 border-blue-300' :
+                               row.status === 'Needs Input' ? 'bg-amber-100 text-amber-800 border-amber-300' :
+                               'bg-slate-100 text-slate-700 border-slate-300';
+            
+            tr.innerHTML = `
+              <td class="py-2.5 px-3 font-mono text-[11px] font-medium">${escapeHtml(row.date)}</td>
+              <td class="py-2.5 px-3 font-bold text-slate-900">${escapeHtml(row.company)}</td>
+              <td class="py-2.5 px-3 font-semibold text-slate-800">${escapeHtml(row.title)}</td>
+              <td class="py-2.5 px-3 text-slate-600">${escapeHtml(row.location)}</td>
+              <td class="py-2.5 px-3 text-slate-600">${escapeHtml(row.work_type)}</td>
+              <td class="py-2.5 px-3">
+                ${row.job_link ? `<a href="${escapeHtml(row.job_link)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline font-medium inline-flex items-center gap-1"><span>Link</span><span class="text-[10px]">↗</span></a>` : '-'}
+              </td>
+              <td class="py-2.5 px-3">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border font-mono ${statusClass}">${escapeHtml(row.status)}</span>
+              </td>
+              <td class="py-2.5 px-3 text-slate-500 max-w-xs truncate" title="${escapeHtml(row.reason_notes)}">${escapeHtml(row.reason_notes || '-')}</td>
+            `;
+            tbodyApps.appendChild(tr);
+          });
+        }
+
+        // Render Contacts Sheet
+        const tbodyContacts = document.getElementById('excel-tbody-contacts');
+        tbodyContacts.innerHTML = '';
+        const emptyContacts = document.getElementById('excel-empty-contacts');
+
+        if (contacts.length === 0) {
+          emptyContacts.classList.remove('hidden');
+        } else {
+          emptyContacts.classList.add('hidden');
+          contacts.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-slate-50 transition-colors text-slate-800';
+            tr.innerHTML = `
+              <td class="py-2.5 px-3 font-mono text-[11px] font-medium">${escapeHtml(row.date)}</td>
+              <td class="py-2.5 px-3 font-bold text-slate-900">${escapeHtml(row.company)}</td>
+              <td class="py-2.5 px-3 font-semibold text-slate-700">${escapeHtml(row.type)}</td>
+              <td class="py-2.5 px-3 text-slate-800 font-medium">${escapeHtml(row.name_title)}</td>
+              <td class="py-2.5 px-3">
+                ${row.profile_url ? `<a href="${escapeHtml(row.profile_url)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline inline-flex items-center gap-1"><span>Profile</span><span class="text-[10px]">↗</span></a>` : '-'}
+              </td>
+              <td class="py-2.5 px-3">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border bg-blue-50 text-blue-800 border-blue-200 font-mono">${escapeHtml(row.status)}</span>
+              </td>
+            `;
+            tbodyContacts.appendChild(tr);
+          });
+        }
+
+      } catch (err) {
+        showToast('Could not load Excel data: ' + err.message, 'error');
+      }
+    }
+
+    // Email Sync Hub Controller
+    function openEmailSyncModal() {
+      document.getElementById('email-sync-preview-results').classList.add('hidden');
+      document.getElementById('email-sync-modal').classList.remove('hidden');
+    }
+
+    function closeEmailSyncModal() {
+      document.getElementById('email-sync-modal').classList.add('hidden');
+    }
+
+    async function runLiveEmailSync() {
+      const btn = document.getElementById('btn-live-sync');
+      const orig = btn.innerHTML;
       btn.disabled = true;
-      btn.innerHTML = `<span class="inline-block animate-spin mr-1">↻</span><span>Syncing...</span>`;
+      btn.innerHTML = `<span class="animate-spin inline-block mr-1">↻</span><span>Scanning...</span>`;
 
       try {
         const res = await fetch('/api/email-sync', {
@@ -1266,20 +1730,58 @@
           body: JSON.stringify({ simulate: false })
         });
         const data = await res.json();
-        const events = data.events || [];
-        
-        if (events.length > 0) {
-          const summary = events.map(e => `${e.company}: ${e.status_label}`).join(', ');
-          showToast(`Recruiter Sync: ${summary}`, 'success');
+        if (data.configured) {
+          showToast(data.message, 'success');
+          loadData();
         } else {
-          showToast('Inbox checked: No new recruiter emails detected at this time.', 'info');
+          showToast(data.message, 'info');
         }
-        loadData();
       } catch (err) {
-        showToast('Could not sync email replies: ' + err.message, 'error');
+        showToast('Sync error: ' + err.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.innerHTML = origText;
+        btn.innerHTML = orig;
+      }
+    }
+
+    async function runSimulationPreview() {
+      const btn = document.getElementById('btn-run-simulation');
+      const orig = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span>Simulating...</span>`;
+
+      try {
+        const res = await fetch('/api/email-sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ simulate: true })
+        });
+        const data = await res.json();
+        const resultsEl = document.getElementById('email-sync-preview-results');
+        resultsEl.classList.remove('hidden');
+        resultsEl.innerHTML = `
+          <div class="font-bold text-xs text-slate-900 border-b pb-1.5 flex items-center justify-between">
+            <span>Simulation Preview (${(data.events || []).length} events)</span>
+            <span class="text-[10px] text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded font-mono">Test Mode: Live CRM not modified</span>
+          </div>
+          <div class="space-y-1.5 pt-1">
+            ${(data.events || []).map(e => `
+              <div class="p-2 bg-white rounded-lg border border-slate-200 flex items-center justify-between">
+                <div>
+                  <span class="font-bold text-slate-900">${escapeHtml(e.company)}</span>
+                  <span class="text-slate-500 text-[11px] block truncate">${escapeHtml(e.email_subject || '')}</span>
+                </div>
+                <span class="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">${escapeHtml(e.status_label)}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        showToast('Preview simulation generated for inspection.', 'info');
+      } catch (err) {
+        showToast('Simulation error: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = orig;
       }
     }
 

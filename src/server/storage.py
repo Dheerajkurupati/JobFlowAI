@@ -198,6 +198,8 @@ class CRMStorage:
                 "github": parsed.github if parsed.github else current.get("github"),
                 "skills": parsed.skills if parsed.skills else current.get("skills"),
                 "primary_roles": parsed.primary_roles if parsed.primary_roles else current.get("primary_roles"),
+                "projects_summary": parsed.projects_text if parsed.projects_text else current.get("projects_summary", ""),
+                "experience_summary": parsed.experience_text if parsed.experience_text else current.get("experience_summary", ""),
                 "resume_path": str(target_path),
                 "resume_filename": filename,
                 "resume_uploaded": True

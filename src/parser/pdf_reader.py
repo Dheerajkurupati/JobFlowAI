@@ -164,6 +164,33 @@ def parse_resume_to_profile(file_path: str) -> CandidateProfile:
                 )
             )
 
+    # Extract real experience from text
+    exp_text = ""
+    exp_match = re.search(r"(?:EXPERIENCE|WORK EXPERIENCE|PROFESSIONAL EXPERIENCE)[\s\S]*?(?=(?:PROJECTS|ACADEMIC PROJECTS|EDUCATION|SKILLS|CERTIFICATES|ACHIEVEMENTS|$))", raw_text, re.IGNORECASE)
+    if exp_match:
+        exp_lines = [l.strip() for l in exp_match.group(0).split("\n") if l.strip()]
+        if len(exp_lines) > 1:
+            exp_text = "\n".join(exp_lines[1:]).strip()
+
+    # Extract real projects from text
+    proj_text = ""
+    proj_match = re.search(r"(?:PROJECTS|ACADEMIC PROJECTS)[\s\S]*?(?=(?:CERTIFICATES|ACHIEVEMENTS|EDUCATION|EXPERIENCE|SKILLS|$))", raw_text, re.IGNORECASE)
+    if proj_match:
+        proj_lines = [l.strip() for l in proj_match.group(0).split("\n") if l.strip()]
+        if len(proj_lines) > 1:
+            proj_text = "\n".join(proj_lines[1:]).strip()
+
+    # Extract education from text
+    edu_text = ""
+    edu_match = re.search(r"(?:EDUCATION|ACADEMIC BACKGROUND)[\s\S]*?(?=(?:CERTIFICATES|ACHIEVEMENTS|PROJECTS|EXPERIENCE|SKILLS|$))", raw_text, re.IGNORECASE)
+    if edu_match:
+        edu_lines = [l.strip() for l in edu_match.group(0).split("\n") if l.strip()]
+        if len(edu_lines) > 1:
+            edu_text = "\n".join(edu_lines[1:]).strip()
+
+    # Factual summary strictly derived from candidate's extracted credentials
+    summary = f"{name} — {', '.join(primary_roles[:2])} with hands-on engineering experience in {', '.join(skills[:5])}."
+
     return CandidateProfile(
         name=name,
         email=email,
@@ -173,6 +200,10 @@ def parse_resume_to_profile(file_path: str) -> CandidateProfile:
         github_url=github or None,
         skills=skills,
         projects=projects,
+        summary=summary,
+        projects_text=proj_text,
+        experience_text=exp_text,
+        education_text=edu_text,
         primary_roles=primary_roles,
         secondary_roles=secondary_roles,
         target_locations=["Hyderabad", "Bengaluru", "Chennai", "Pune", "Remote"]

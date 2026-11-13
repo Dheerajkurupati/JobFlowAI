@@ -1,5 +1,6 @@
 """Unit tests for FastAPI CRM server endpoints."""
 
+from pathlib import Path
 from fastapi.testclient import TestClient
 from src.server.app import app
 
@@ -89,6 +90,19 @@ def test_get_and_update_profile_endpoint():
 
     # Restore original
     client.post("/api/profile", json=orig)
+    txt_path = Path("data/uploaded_resume.txt")
+    if txt_path.exists():
+        txt_path.unlink()
+    # Ensure profile file preserves original resume metadata
+    profile_path = Path("data/candidate_profile.json")
+    if profile_path.exists():
+        import json
+        with open(profile_path, "r") as f:
+            p_data = json.load(f)
+        p_data["resume_filename"] = orig.get("resume_filename", "Dheeraj_Kurupati_Resume.pdf")
+        p_data["resume_path"] = orig.get("resume_path", "data/Dheeraj_Kurupati_Resume.pdf")
+        with open(profile_path, "w") as f:
+            json.dump(p_data, f, indent=2)
 
 
 def test_upload_resume_endpoint(tmp_path):
@@ -114,4 +128,17 @@ def test_upload_resume_endpoint(tmp_path):
 
     # Restore original
     client.post("/api/profile", json=orig)
+    txt_path = Path("data/uploaded_resume.txt")
+    if txt_path.exists():
+        txt_path.unlink()
+    # Ensure profile file preserves original resume metadata
+    profile_path = Path("data/candidate_profile.json")
+    if profile_path.exists():
+        import json
+        with open(profile_path, "r") as f:
+            p_data = json.load(f)
+        p_data["resume_filename"] = orig.get("resume_filename", "Dheeraj_Kurupati_Resume.pdf")
+        p_data["resume_path"] = orig.get("resume_path", "data/Dheeraj_Kurupati_Resume.pdf")
+        with open(profile_path, "w") as f:
+            json.dump(p_data, f, indent=2)
 

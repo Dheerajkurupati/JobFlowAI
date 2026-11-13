@@ -49,6 +49,9 @@ class CandidateProfile(BaseModel):
     skills: List[str] = Field(default_factory=list)
     projects: List[Project] = Field(default_factory=list)
     experience: List[Experience] = Field(default_factory=list)
+    projects_text: Optional[str] = None
+    experience_text: Optional[str] = None
+    education_text: Optional[str] = None
 
     # Derived Role Matrix (automatically computed from resume skills)
     primary_roles: List[str] = Field(default_factory=list)
