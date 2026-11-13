@@ -55,62 +55,8 @@ class CRMStorage:
                 json.dump(default_memory, f, indent=2)
 
         if not self.jobs_file.exists():
-            # Seed with starter sample jobs so user sees the live CRM immediately
-            initial_jobs = [
-                {
-                    "id": "job-1",
-                    "date": date.today().isoformat(),
-                    "company": "Cognizant",
-                    "title": "Junior AI / Python Developer",
-                    "location": "Hyderabad",
-                    "work_type": "Hybrid",
-                    "job_link": "https://www.naukri.com/job-listings-python-dev-12345",
-                    "status": "applied",
-                    "match_score": 88,
-                    "matched_skills": ["Python", "FastAPI", "LangChain", "SQL"],
-                    "missing_skills": ["Docker in production"],
-                    "screening_notes": "88% Match, FastAPI + LangChain match. Screening: Notice = Immediate, Previously employed = No.",
-                    "recruiter_name": "Priya Sharma - Technical Hiring",
-                    "recruiter_url": "https://www.linkedin.com/in/recruiter-priya",
-                    "outreach_draft": "Hi Priya, I noticed Cognizant is hiring a Junior AI/Python Developer in Hyderabad. I recently built JobFlow-AI with FastAPI and LangChain, matching the requirements closely. Would love to connect!"
-                },
-                {
-                    "id": "job-2",
-                    "date": date.today().isoformat(),
-                    "company": "Williams Lea",
-                    "title": "Finance / Data Analyst",
-                    "location": "Remote",
-                    "work_type": "Remote",
-                    "job_link": "https://www.naukri.com/job-listings-data-analyst-67890",
-                    "status": "review",
-                    "match_score": 92,
-                    "matched_skills": ["Python", "Pandas", "SQL", "Reporting"],
-                    "missing_skills": [],
-                    "screening_notes": "92% Match. All screening answers verified. Ready for 1-click submission review.",
-                    "recruiter_name": None,
-                    "recruiter_url": None,
-                    "outreach_draft": None
-                },
-                {
-                    "id": "job-3",
-                    "date": date.today().isoformat(),
-                    "company": "TechMahindra",
-                    "title": "Associate AI Engineer",
-                    "location": "Bengaluru",
-                    "work_type": "On-site",
-                    "job_link": "https://www.naukri.com/job-listings-ai-eng-99887",
-                    "status": "needs_input",
-                    "match_score": 79,
-                    "matched_skills": ["Python", "NLP", "Machine Learning"],
-                    "missing_skills": ["AWS SageMaker"],
-                    "screening_notes": "Needs your input: Company asks 'Are you willing to sign a 1-year service commitment?'",
-                    "recruiter_name": "Arun Kumar - Talent Acquisition",
-                    "recruiter_url": "https://www.linkedin.com/in/arun-kumar-hr",
-                    "outreach_draft": None
-                }
-            ]
             with open(self.jobs_file, "w", encoding="utf-8") as f:
-                json.dump(initial_jobs, f, indent=2)
+                json.dump([], f, indent=2)
 
     def get_all_jobs(self) -> List[Dict]:
         if not self.jobs_file.exists():
@@ -176,7 +122,18 @@ class CRMStorage:
         if profile_file.exists():
             try:
                 with open(profile_file, "r", encoding="utf-8") as f:
-                    return json.load(f)
+                    data = json.load(f)
+                    if data.get("linkedin") and not data["linkedin"].startswith("http"):
+                        data["linkedin"] = f"https://{data['linkedin']}"
+                    if data.get("github") and not data["github"].startswith("http"):
+                        data["github"] = f"https://{data['github']}"
+                    if "summary" not in data:
+                        data["summary"] = ""
+                    if "projects_summary" not in data:
+                        data["projects_summary"] = ""
+                    if "experience_summary" not in data:
+                        data["experience_summary"] = ""
+                    return data
             except Exception:
                 pass
 
@@ -189,11 +146,14 @@ class CRMStorage:
             "email": cfg.candidate.email,
             "phone": cfg.candidate.phone,
             "city": cfg.candidate.city,
-            "linkedin": "",
-            "github": "",
+            "linkedin": "https://linkedin.com/in/dheeraj-kurupati04",
+            "github": "https://github.com/Dheerajkurupati",
             "skills": ["Python", "FastAPI", "SQL", "Machine Learning", "LLM", "RAG"],
             "primary_roles": ["AI Engineer", "Python Developer"],
             "target_locations": ["Hyderabad", "Bengaluru", "Chennai", "Pune", "Remote India"],
+            "summary": "AI Engineer & Python Developer specializing in Autonomous Agents, LLM Orchestration, and RAG pipelines.",
+            "projects_summary": "JobFlow-AI: Playwright & FastAPI autonomous agent CRM system with multi-board harvesting and closed-loop recruiter tracking.",
+            "experience_summary": "Hands-on engineering in Generative AI, Python backend development, REST APIs, and automated browser workflows.",
             "resume_path": cfg.candidate.resume_path,
             "resume_filename": Path(cfg.candidate.resume_path).name,
             "resume_uploaded": resume_exists
@@ -202,6 +162,10 @@ class CRMStorage:
     def save_candidate_profile(self, profile_data: Dict) -> Dict:
         profile_file = self.data_dir / "candidate_profile.json"
         current = self.get_candidate_profile()
+        if profile_data.get("linkedin") and not profile_data["linkedin"].startswith("http"):
+            profile_data["linkedin"] = f"https://{profile_data['linkedin']}"
+        if profile_data.get("github") and not profile_data["github"].startswith("http"):
+            profile_data["github"] = f"https://{profile_data['github']}"
         current.update(profile_data)
         with open(profile_file, "w", encoding="utf-8") as f:
             json.dump(current, f, indent=2)

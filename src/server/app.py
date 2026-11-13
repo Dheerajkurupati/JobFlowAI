@@ -56,6 +56,9 @@ class ProfileUpdateRequest(BaseModel):
     skills: Optional[List[str]] = None
     primary_roles: Optional[List[str]] = None
     target_locations: Optional[List[str]] = None
+    summary: Optional[str] = None
+    projects_summary: Optional[str] = None
+    experience_summary: Optional[str] = None
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -387,8 +390,14 @@ async def auto_fill_job(job_id: str, req: Optional[AutoFillRequest] = None):
         new_status = "review"
 
     audit_note = f"Auto-fill: {len(result.fields_filled)} fields populated. {result.audit_notes}"
-    current_notes = target.get("screening_notes", "")
-    storage.update_job_status(job_id, new_status, f"{current_notes} | {audit_note}")
+    current_notes = target.get("screening_notes", "") or ""
+    if result.status != "error":
+        if audit_note not in current_notes:
+            storage.update_job_status(job_id, new_status, f"{current_notes} | {audit_note}" if current_notes else audit_note)
+    else:
+        # For error, only log once without changing application pipeline status
+        if result.audit_notes not in current_notes:
+            storage.update_job_status(job_id, target.get("status", "discovered"), f"{current_notes} | [Pilot Notice] {result.audit_notes}" if current_notes else f"[Pilot Notice] {result.audit_notes}")
 
     return {
         "message": "Auto-fill pass complete",

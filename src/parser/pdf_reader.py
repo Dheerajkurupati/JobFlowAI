@@ -50,10 +50,14 @@ def extract_contact_details(text: str) -> Tuple[str, str, str, str, str, str]:
     # 3. LinkedIn
     linkedin_match = re.search(r"(?:https?://)?(?:www\.)?linkedin\.com/in/[\w-]+", text, re.IGNORECASE)
     linkedin = linkedin_match.group(0) if linkedin_match else ""
+    if linkedin and not linkedin.startswith("http"):
+        linkedin = f"https://{linkedin}"
 
     # 4. GitHub
     github_match = re.search(r"(?:https?://)?(?:www\.)?github\.com/[\w-]+", text, re.IGNORECASE)
     github = github_match.group(0) if github_match else ""
+    if github and not github.startswith("http"):
+        github = f"https://{github}"
 
     # 5. City heuristic (check common tech hubs)
     hubs = ["Hyderabad", "Bengaluru", "Bangalore", "Chennai", "Pune", "Mumbai", "Delhi", "Noida", "Gurugram"]

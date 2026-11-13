@@ -173,8 +173,12 @@ class EmailFeedbackEngine:
 
         if target_job:
             # Update CRM storage
-            current_notes = target_job.get("screening_notes", "")
-            updated_notes = f"{current_notes} | {action_note}"
+            current_notes = target_job.get("screening_notes", "") or ""
+            # Avoid repeating the exact same recruiter event in notes
+            if f"Recruiter Email: {status_label}" in current_notes or subject[:35] in current_notes:
+                updated_notes = current_notes
+            else:
+                updated_notes = f"{current_notes} | {action_note}" if current_notes else action_note
             self.storage.update_job_status(target_job["id"], detected_status, updated_notes)
 
             # Update Excel tracker
