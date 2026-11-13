@@ -205,8 +205,8 @@ class EmailFeedbackEngine:
             action_taken=action_summary
         )
 
-    def sync_simulated_feedback(self) -> List[EmailFeedbackItem]:
-        """Simulate recruiter responses for testing the closed-loop mechanism immediately."""
+    def sync_simulated_feedback(self, persist: bool = False) -> List[EmailFeedbackItem]:
+        """Simulate recruiter responses for testing the closed-loop mechanism without modifying real applications unless persist=True."""
         jobs = self.storage.get_all_jobs()
         if not jobs:
             return []
@@ -249,14 +249,25 @@ class EmailFeedbackEngine:
             sender = tmpl[3].format(company_slug=slug)
             snippet = tmpl[4]
 
-            item = self.process_feedback(
-                company=company,
-                detected_status=crm_status,
-                status_label=status_label,
-                subject=subject,
-                sender=sender,
-                snippet=snippet
-            )
+            if persist:
+                item = self.process_feedback(
+                    company=company,
+                    detected_status=crm_status,
+                    status_label=status_label,
+                    subject=subject,
+                    sender=sender,
+                    snippet=snippet
+                )
+            else:
+                item = EmailFeedbackItem(
+                    company=company,
+                    detected_status=crm_status,
+                    status_label=status_label,
+                    email_subject=subject,
+                    sender=sender,
+                    snippet=snippet[:120],
+                    action_taken="Simulated preview (No changes applied to CRM)"
+                )
             feedback_results.append(item)
 
         return feedback_results

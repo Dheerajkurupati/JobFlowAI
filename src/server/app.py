@@ -272,6 +272,12 @@ async def save_memory(req: MemoryUpdateRequest):
     return {"message": "Memory updated", "memory": updated}
 
 
+@app.delete("/api/memory/{key}")
+async def delete_memory(key: str):
+    updated = storage.delete_memory(key.strip())
+    return {"message": "Memory deleted", "memory": updated}
+
+
 @app.get("/api/profile")
 async def get_profile():
     """Retrieve active candidate profile and resume upload status."""

@@ -104,6 +104,14 @@ class CRMStorage:
             json.dump(memory, f, indent=2)
         return memory
 
+    def delete_memory(self, key: str) -> Dict[str, str]:
+        memory = self.get_memory()
+        if key in memory:
+            del memory[key]
+            with open(self.memory_file, "w", encoding="utf-8") as f:
+                json.dump(memory, f, indent=2)
+        return memory
+
     def sync_job_to_excel(self, job_dict: Dict) -> None:
         """Sync an applied job into data/Job_Tracker.xlsx."""
         self.excel_tracker.log_application(
